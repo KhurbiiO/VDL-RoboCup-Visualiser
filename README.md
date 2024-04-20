@@ -4,7 +4,7 @@ The match visualization tool for VDL robocup football match held.
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your system:
-- Java Development Kit (JDK), version 17 or newer.
+- Java Development Kit (JDK), version 11 or newer.
 
 ## Installing Maven
 
