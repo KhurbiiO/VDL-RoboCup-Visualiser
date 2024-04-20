@@ -24,3 +24,17 @@ For Ubuntu/Debian-based systems:
 ```bash
 sudo apt update
 sudo apt install maven
+```
+### Verify Installation
+```bash
+mvn -v
+```
+
+## Building and Running the Project
+To build the project, navigate to the directory containing your project's pom.xml file and execute:
+```bash
+mvn clean install
+mvn exec:java
+```
+
+
