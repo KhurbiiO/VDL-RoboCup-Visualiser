@@ -1,1 +1,0 @@
-start jlink-image\bin\javaw -jar modules\VDL-RoboCup-Visualizer-1.0-SNAPSHOT.jar
