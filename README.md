@@ -29,8 +29,7 @@ sudo apt install maven
 ## Building and Running the Project
 To build the project, navigate to the directory containing your project's pom.xml file and execute:
 ```bash
-mvn clean install
-mvn exec:java
+mvn clean install package
 ```
 
 
