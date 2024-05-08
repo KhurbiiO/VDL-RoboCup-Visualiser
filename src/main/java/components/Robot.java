@@ -1,12 +1,12 @@
 package components;
 import javafx.scene.image.Image;
 
-import components.Coordinate;
+import components.Position;
 
 
 public class Robot {
     private int matchId;
-    public Coordinate coordinate;
+    public Position coordinate;
     private Image icon;
 
     public int getId(){
@@ -15,7 +15,7 @@ public class Robot {
 
     public Robot(int match_id){
         matchId = match_id;
-        coordinate = new Coordinate(null, null, null, null);
+        coordinate = new Position(null, null, null, null);
         try {
             icon = new Image(getClass().getResource("/media/robot.png").toExternalForm());
         } catch (Exception e) {
