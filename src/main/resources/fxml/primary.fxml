@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="visualizer.match_viewer.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualizer.match_viewer.FXMLController">
     <children>
-        <Button layoutX="128.0" layoutY="107.0" onAction="#btnClickAction" text="Click Me!" />
-        <!-- <Label fx:id="lblOut" layoutX="53.0" layoutY="30.0" minHeight="16" minWidth="69" prefHeight="52.0" prefWidth="215.0" /> -->
-        <ImageView fx:id="view" fitHeight="204.0" fitWidth="203.0" layoutX="20.0" layoutY="208.0" pickOnBounds="true" preserveRatio="true" />
+      <Pane fx:id="fieldPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #b3f2c4;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="325.0" AnchorPane.topAnchor="10.0" />
+      <Pane fx:id="matchStatsPane" layoutX="675.0" layoutY="-10.0" style="-fx-background-color: #83ccba;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="685.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="34.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="186.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="102.0" layoutY="179.0" prefHeight="45.0" prefWidth="111.0" style="-fx-background-color: #4b7d71;" text="0 - 0">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+         </children></Pane>
     </children>
 </AnchorPane>
