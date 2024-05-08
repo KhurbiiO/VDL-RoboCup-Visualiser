@@ -12,6 +12,9 @@ buildNumber.properties
  
 # Eclipse Core
 .project
-.idea
+.idea/
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Visual Studio Code stuff
+.vscode/
