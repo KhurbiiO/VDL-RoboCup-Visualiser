@@ -2,14 +2,14 @@ package components;
 
 import java.util.Vector;
 
-public class Coordinate {
+public class Position {
     private Vector<Double> coordinate;
     private Double digitalWidth;
     private Double digitalHeight;
     private Double realWidth;
     private Double realHeight;
 
-    public Coordinate(Double digital_grid_width, Double digital_grid_height, Double real_grid_width, Double real_grid_height){
+    public Position(Double digital_grid_width, Double digital_grid_height, Double real_grid_width, Double real_grid_height){
         coordinate = new Vector<Double>(3);
         for (int i = 0; i < 3; i++)
             coordinate.add(0d);
