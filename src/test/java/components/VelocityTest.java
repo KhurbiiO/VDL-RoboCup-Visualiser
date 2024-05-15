@@ -59,4 +59,28 @@ public class VelocityTest {
         assertThrows(IllegalArgumentException.class, () -> {
             velocity.setBallVelocity(invalidRobotPosition, velocityVector);});
     }
+
+    @Test
+    public void itDoesCorrectOriginTranslationForObstacles(){
+        double[] obstaclePosition = {-6.178519, 1.256181};
+        double[] velocityVector = {-0.123897, -0.349871};
+
+        double[] expectedVector = {-6.302416, 0.90631};
+
+        velocity.setObstacleVelocity(obstaclePosition, velocityVector);
+
+        double[] translatedVector = velocity.getObstacleVelocity();
+
+        assertArrayEquals(expectedVector, translatedVector);
+    }
+
+    @Test
+    public void itThrowsAnExceptionWhenObstacleAndVelocityDoNotMatch(){
+        double[] invalidObstaclePosition = {3, -2, 0.5, 10};
+        double[] velocityVector = {-0.000472, -0.000724, 0.001935};
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            velocity.setObstacleVelocity(invalidObstaclePosition, velocityVector);});
+        
+    }
 }

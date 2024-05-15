@@ -3,6 +3,8 @@ package components;
 public class Velocity {
     private double[] robotVelocity;
     private double[] ballVelocity;
+    private double[] obstacleVelocity;
+
     private int RADIANS_INDEX = 2;
 
     public void setBallVelocity(double[] ballPosition, double[] vector){
@@ -21,6 +23,25 @@ public class Velocity {
         return robotVelocity;
     }
 
+    public void setObstacleVelocity(double[] obstaclePosition, double[] vector){
+        obstacleVelocity = origintranslationObstacle(obstaclePosition, vector);
+    }
+
+    public double[] getObstacleVelocity(){
+        return obstacleVelocity;
+    }
+
+      
+    private double[] origintranslationObstacle(double[] obstacle, double[] vector){
+        if(obstacle.length != vector.length){
+            throw new IllegalArgumentException("Arrays must be of equal length");
+        }
+        double[] result = new double[obstacle.length];
+        for (int i = 0; i < obstacle.length; i++){
+            result[i] = obstacle[i] + vector[i];
+        }
+        return result;
+    }
 
     private double[] originTranslationRadians(double[] robot, double[] vector){
         if (robot.length != vector.length) {
@@ -50,5 +71,5 @@ public class Velocity {
         }
         return result;
     }   
-    
+  
 }
