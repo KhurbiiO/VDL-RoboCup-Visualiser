@@ -22,6 +22,7 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -39,28 +40,76 @@ public class FXMLController implements Initializable {
     private Team teamB;
     private Ball ball;
 
+    private int idAView = 0;
+    private int idBView = 0;
+
     CoordsTransformation transformer = new CoordsTransformation();
 
     @FXML
-    ImageView logoA;
+    Button shiftA;
+    @FXML
+    Label xPoseA;
+    @FXML
+    Label yPoseA;
+    @FXML
+    Label zPoseA;
+    @FXML 
+    Label intentA;
+    @FXML 
+    Label engagedA;
+    @FXML
+    Label batA;
+    @FXML
+    Label IDA;
 
+
+    @FXML
+    Button shiftB;
+    @FXML
+    Label xPoseB;
+    @FXML
+    Label yPoseB;
+    @FXML
+    Label zPoseB;
+    @FXML 
+    Label intentB;
+    @FXML 
+    Label engagedB;
+    @FXML
+    Label batB;
+    @FXML
+    Label IDB;
+
+    @FXML
+    ImageView logoA;
     @FXML
     ImageView logoB;
-
     @FXML
     Label scoreA;
-
     @FXML
     Label scoreB;
-
     @FXML
     Pane fieldPane;  
-
     @FXML
     GridPane matchStatsPane;
-
     @FXML
     Label matchBoard;
+
+    private int shiftNumber(int x){
+        return ++x % TEAM_SIZE;
+    }
+
+    @FXML
+    private void shiftAFunc(){
+        idAView = shiftNumber(idAView);
+        IDA.setText(Integer.toString(idAView+1));
+    }
+
+    @FXML
+    private void shiftBFunc(){
+        idBView = shiftNumber(idBView);
+        IDB.setText(Integer.toString(idBView+1));
+    }
 
     public void updateScreenCoordinate(ImageView view, double[] newPose){
         TranslateTransition transition = new TranslateTransition();
@@ -108,6 +157,26 @@ public class FXMLController implements Initializable {
 
                 if (indexShift > 0){
                     currentPose = transformer.transformRobotCoords(targetPose);
+                    if (i == idBView){
+                        xPoseB.setText(player.currentPosition.getX().toString());
+                        yPoseB.setText(player.currentPosition.getY().toString());
+                        zPoseB.setText(player.currentPosition.getZ().toString());
+
+                        intentB.setText(player.getIntention());
+                        engagedB.setText(player.getBallEngaged() ? "true" : "false");
+                        batB.setText(Double.toString(player.getBatterPercentage()));
+                    }
+                }
+                else{
+                    if (i == idAView){
+                        xPoseA.setText(player.currentPosition.getX().toString());
+                        yPoseA.setText(player.currentPosition.getY().toString());
+                        zPoseA.setText(player.currentPosition.getZ().toString());
+
+                        intentA.setText(player.getIntention());
+                        engagedA.setText(player.getBallEngaged() ? "true" : "false");
+                        batA.setText(Double.toString(player.getBatterPercentage()));
+                    }
                 }
                 player.setTargetPosition(targetPose[0], targetPose[1], targetPose[2]); //TODO: Look into the necesity of a fluctuations counter
                 // TODO: Add velocity reader

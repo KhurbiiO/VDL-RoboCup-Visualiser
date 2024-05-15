@@ -80,7 +80,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Switch A">
+                        <Button fx:id="shiftA" mnemonicParsing="false" onAction="#shiftAFunc" text="Switch A">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -97,7 +97,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" fx:id="xPoseA">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -114,7 +114,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="yPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -131,7 +131,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="zPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -148,7 +148,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="intentA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -165,7 +165,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="engagedA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -182,7 +182,24 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="batA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="ID:">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="IDA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -195,7 +212,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Switch B">
+                        <Button fx:id="shiftB" mnemonicParsing="false" onAction="#shiftBFunc" text="Switch B">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -212,7 +229,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" fx:id="xPoseB">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -229,7 +246,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="yPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -246,7 +263,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="zPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -263,7 +280,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="intentB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -280,7 +297,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="engagedB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -297,7 +314,24 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="batB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="ID:">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="IDB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
