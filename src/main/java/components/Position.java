@@ -6,7 +6,6 @@ public class Position {
     private Vector<Double> coordinate;
 
     public Position(){
-    public Position(){
         coordinate = new Vector<Double>(3);
         for (int i = 0; i < 3; i++)
             coordinate.add(0d);
@@ -51,9 +50,7 @@ public class Position {
     private Double getAxis(int index){
         return coordinate.get(index);
     }
-
-    private void setAxis(int index, Double newValue){
-        coordinate.set(index, newValue);
+    
     private void setAxis(int index, Double newValue){
         coordinate.set(index, newValue);
     }

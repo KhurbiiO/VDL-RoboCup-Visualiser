@@ -4,8 +4,8 @@ import javafx.scene.image.Image;
 public class Robot {
     public Position currentPosition;
     public Position targetPosition;
-    private float currentVelocity;
-    private float batterPercentage;
+    private double[] currentVelocity;
+    private double batterPercentage;
     private boolean ballEngaged;
     private String intention;
     private Image icon;
@@ -14,7 +14,7 @@ public class Robot {
         // "/media/robot.png"
         currentPosition = new Position();
         targetPosition = new Position();
-        currentVelocity = 0f;
+        currentVelocity[3] = {0d, 0d, 0d};
         batterPercentage = 100f;
         ballEngaged = false;
         intention = "NULL";
