@@ -14,7 +14,7 @@ public class Robot {
         // "/media/robot.png"
         currentPosition = new Position();
         targetPosition = new Position();
-        currentVelocity[3] = {0d, 0d, 0d};
+        currentVelocity = new double[3];
         batterPercentage = 100f;
         ballEngaged = false;
         intention = "NULL";

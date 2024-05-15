@@ -226,6 +226,10 @@ public class FXMLController implements Initializable {
         teamA = new Team("Wolves", TEAM_SIZE, "/media/team_one.png", "/media/red_dot.png");
         teamB = new Team("Skull", TEAM_SIZE, "/media/team_two.png", "/media/blue_dot.png");
 
+        IDA.setText(Integer.toString(1));
+        IDB.setText(Integer.toString(1));
+        
+
         ball = new Ball();
 
         matchBoard.setText(teamA.getTeamName()+" V.S "+teamB.getTeamName());
