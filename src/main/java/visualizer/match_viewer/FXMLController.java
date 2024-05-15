@@ -43,6 +43,8 @@ public class FXMLController implements Initializable {
     private int idAView = 0;
     private int idBView = 0;
 
+    private double NONE_FOCUS_OPACITY = 0.5;
+
     CoordsTransformation transformer = new CoordsTransformation();
 
     @FXML
@@ -101,14 +103,28 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void shiftAFunc(){
+        ImageView last = getImageViewFromPane(idAView);
+        last.setOpacity(NONE_FOCUS_OPACITY);
+
         idAView = shiftNumber(idAView);
         IDA.setText(Integer.toString(idAView+1));
+
+        ImageView next = getImageViewFromPane(idAView);
+        next.setOpacity(1);
     }
 
     @FXML
     private void shiftBFunc(){
+
+        ImageView last = getImageViewFromPane(idBView+TEAM_SIZE);
+        last.setOpacity(NONE_FOCUS_OPACITY);
+
         idBView = shiftNumber(idBView);
         IDB.setText(Integer.toString(idBView+1));
+
+        ImageView next = getImageViewFromPane(idBView+TEAM_SIZE);
+        next.setOpacity(1);
+
     }
 
     public void updateScreenCoordinate(ImageView view, double[] newPose){
@@ -238,12 +254,14 @@ public class FXMLController implements Initializable {
         logoB = new ImageView(teamB.getLogo());
 
         for (int i = 0; i < TEAM_SIZE; i++){
-            ImageView view = new ImageView(teamA.getPlayer(i).getIcon());            
+            ImageView view = new ImageView(teamA.getPlayer(i).getIcon());  
+            view.setOpacity(NONE_FOCUS_OPACITY);          
             fieldPane.getChildren().add(view);
         }
 
         for (int i = 0; i < TEAM_SIZE; i++){
-            ImageView view = new ImageView(teamB.getPlayer(i).getIcon());            
+            ImageView view = new ImageView(teamB.getPlayer(i).getIcon());  
+            view.setOpacity(NONE_FOCUS_OPACITY);          
             fieldPane.getChildren().add(view);
         }
 
@@ -254,9 +272,7 @@ public class FXMLController implements Initializable {
 
         
         if (isSimulated){
-            // String teamAPath = "/home/khurbii/Documents/Fontys_S6/RoboCup/UX_Prototypes/Components/20180621_142627_CAMBADA-TUE/20180621_142627.A.msl";
             String teamAPath = getClass().getResource("/scripts/CAMBADA-TUE/Team.A.msl").toExternalForm().substring(5); //TODO: Remove hardcode substring
-            // String teamBPath = "/home/khurbii/Documents/Fontys_S6/RoboCup/UX_Prototypes/Components/20180621_142627_CAMBADA-TUE/20180621_142627.B.msl";
             String teamBPath = getClass().getResource("/scripts/CAMBADA-TUE/Team.B.msl").toExternalForm().substring(5);
 
             try {
@@ -266,7 +282,7 @@ public class FXMLController implements Initializable {
                 Iterator<JsonNode> teamBData = new ObjectMapper().readTree(teamBString).elements();
 
                 Timeline updateUI = new Timeline(
-                    new KeyFrame(Duration.millis(10d), event -> {
+                    new KeyFrame(Duration.millis(50d), event -> {
                         if(teamAData.hasNext()){
                             updateVisuals(teamAData.next().toString(), teamA, 0);
                         }
