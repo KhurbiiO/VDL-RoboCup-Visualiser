@@ -6,12 +6,12 @@ public class Position {
     private Vector<Double> coordinate;
 
     public Position(){
+    public Position(){
         coordinate = new Vector<Double>(3);
         for (int i = 0; i < 3; i++)
             coordinate.add(0d);
     }
 
-    // Getters
     public Double getX(){
         return getAxis(0);
     }
@@ -24,7 +24,6 @@ public class Position {
         return getAxis(2);
     }
 
-    // Setters
     public void setX(Double value){
         setAxis(0, value);
     }
@@ -37,16 +36,15 @@ public class Position {
         setAxis(2, value);
     }
 
-    public Vector<Double> getCoordinate(){
-        return coordinate;
+    public double[] getCoordinate(){
+        double coordinate_[] = {getX(), getY(), getZ()};
+        return coordinate_;
     }
 
-    public Vector<Double> getGridVVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
-        Vector<Double> coordinate_ = new Vector<Double>(3);
-        coordinate_.add(map(getX(), (realWidth/2), (-realWidth/2), 0d, digitalWidth));
-        coordinate_.add(map(getY(), (realHeight/2), (-realHeight/2), 0d, digitalHeight));
-        coordinate_.add(getZ());
-
+    public double[] getGridVVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
+        double coordinate_[] = {map(getX(), (realWidth/2), (-realWidth/2), digitalWidth, 0d), 
+                                map(getY(), (realHeight/2), (-realHeight/2), digitalHeight, 0d), 
+                                getY()};
         return coordinate_;
     }
 
@@ -56,9 +54,11 @@ public class Position {
 
     private void setAxis(int index, Double newValue){
         coordinate.set(index, newValue);
+    private void setAxis(int index, Double newValue){
+        coordinate.set(index, newValue);
     }
 
-    private Double map(Double x, Double inMin, Double inMax, Double outMin, Double outMax){
+    private double map(double x, double inMin, double inMax, double outMin, double outMax){
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 }

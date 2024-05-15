@@ -25,11 +25,11 @@ public class Robot {
         }
     }
 
-    public float getCurrentVelocity() {
+    public double[] getCurrentVelocity() {
         return currentVelocity;
     }
 
-    public float getBatterPercentage() {
+    public double getBatterPercentage() {
         return batterPercentage;
     }
 
@@ -58,11 +58,11 @@ public class Robot {
         targetPosition.setZ(newZ);
     }
 
-    public void setCurrentVelocity(float currentVelocity) {
+    public void setCurrentVelocity(double[] currentVelocity) {
         this.currentVelocity = currentVelocity;
     }
 
-    public void setBatterPercentage(float batterPercentage) {
+    public void setBatterPercentage(double batterPercentage) {
         this.batterPercentage = batterPercentage;
     }
 
@@ -72,5 +72,13 @@ public class Robot {
 
     public void setBallEngaged(boolean ballEngaged) {
         this.ballEngaged = ballEngaged;
+    }
+
+    public void setIcon(String iconImgPath){
+        try {
+            icon = new Image(getClass().getResource(iconImgPath).toExternalForm());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
