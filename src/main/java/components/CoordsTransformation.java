@@ -6,6 +6,10 @@ public class CoordsTransformation {
         {0, -1, 0},
         {0, 0, 1}
     };
+    private double[][] obstacleTransformationMatrix = {
+        {-1, 0},
+        {0, -1}
+    };
 
     private int RADIANS_INDEX = 2;
 
@@ -19,6 +23,10 @@ public class CoordsTransformation {
         return transformedCoords;
     }
 
+    public double[] transformObstacleCoords(double[] coords){
+        double[] transformedCoords = xyTransform(coords);
+        return transformedCoords;
+    } 
     private double[] xyzTransform(double[] xyz){
         int m = transformationMatrix.length;
         int n = transformationMatrix[0].length;
@@ -55,6 +63,24 @@ public class CoordsTransformation {
             }
         }
         result[RADIANS_INDEX] = (result[RADIANS_INDEX]+Math.PI)%(2 * Math.PI);
+        return result;
+    }
+
+    private double[] xyTransform(double[] xy){
+        int m = obstacleTransformationMatrix.length;
+        int n = obstacleTransformationMatrix[0].length;
+        int p = xy.length;
+
+        if (n != p){
+            throw new IllegalArgumentException("Matrix column count must be equal to vector length");
+        }
+        double[] result = new double[m];
+
+        for (int i = 0; i < m; i++){
+            for(int j = 0; j < p; j++){
+                result[i] += obstacleTransformationMatrix[i][j] * xy[j];
+            }
+        }
         return result;
     }
 }

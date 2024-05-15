@@ -41,6 +41,15 @@ public class CoordsTransformationTest {
     }
 
     @Test
+    public void givenObstaclePosition_whenCalculatePosition_thenReturnTransformedPosition(){
+        double[] originalPositionB = {3,-2};
+        double[] actualPositionB = {-3,2};
+
+        double[] transformedPositionB = coordstransformation.transformObstacleCoords(originalPositionB);
+
+        assertArrayEquals(actualPositionB, transformedPositionB, 0.0001);
+    }
+    @Test
     public void givenInvalidRobotPosition_thenThrowException(){
         double[] invalidRobotPosition = {3,3,3,3};
         assertThrows(IllegalArgumentException.class, () -> {
@@ -56,4 +65,11 @@ public class CoordsTransformationTest {
         });
     }
 
+    @Test
+    public void givenInvalidObstaclePosition_thenThrowException(){
+        double[] invalidObstaclePosition = {3,3,3,3};
+        assertThrows(IllegalArgumentException.class, () -> {
+            coordstransformation.transformObstacleCoords(invalidObstaclePosition);
+        });
+    }
 }
