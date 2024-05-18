@@ -2,49 +2,46 @@
 #include "Utils.hpp"
 #include "Config.hpp"
 
-namespace utils
-{
-   uint32_t ConvertStringToAddr(const char *strAddress)
-   {
-#ifdef _WIN32
-      return inet_addr(strAddress);
-#endif
-#ifdef __LINUX__
-      return inet_pton(strAddress);
-#endif
-   }
-
-}
-
 namespace datastrm
 {
    using namespace custom_exception;
    using namespace stream_config;
 
    /// UDP STREAM ///
-   UdpStream::UdpStream(bool isInput): processDataTask(&UdpStream::ProcessDataTask,this)
+   UdpStream::UdpStream()
    {
       // create socket for udp communication
-      int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+      sockfd = socket(AF_INET, SOCK_DGRAM, 0);
       if (sockfd < 0)
       {
-         throw ObjConstructedFailure("fail to construct DataStream");
+         // throw ObjConstructedFailure("fail to construct DataStream");
       }
 
       // filling server information /destination id/port
       serverAddr.sin_family = AF_INET;
       serverAddr.sin_port = htons(DEFAULT_PORT);
       serverAddr.sin_addr.s_addr = INADDR_ANY;
+   }
 
-      // bind the socket with ther server address
-      if (isInput)
+   UdpStream::UdpStream(const int port) : sockfd(-1), isRun(false)
+   {
+      // create socket for udp communication
+      sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+      if (sockfd < 0)
       {
-         if (bind(sockfd, (const struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-         {
-            throw BindSocketFailure("udp bind socket failure");
-         }
+         // throw ObjConstructedFailure("fail to construct DataStream");
       }
 
+      // filling server information /destination id/port
+      serverAddr.sin_family = AF_INET;
+      serverAddr.sin_port = htons(port);
+      serverAddr.sin_addr.s_addr = inet_addr(DEVICE_ADRESS);
+
+      // bind the socket with ther server address
+      if (bind(int(sockfd), (const struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+      {
+         // throw BindSocketFailure("udp bind socket failure");
+      }
    }
 
    UdpStream::~UdpStream()
@@ -57,7 +54,7 @@ namespace datastrm
       if (isOn && !isRun)
       {
          isRun = true;
-         processDataTask.detach(); 
+         processDataTask->detach();
       }
    }
 
@@ -70,6 +67,11 @@ namespace datastrm
    {
       serverAddr.sin_addr.s_addr = newAddress;
    }
+
+   // void UdpStream::SetAddress(const char *newAddress)
+   // {
+   //    serverAddr.sin_addr.s_addr = inet_addr(newAddress);
+   // }
 
    uint32_t UdpStream::GetAddress()
    {
@@ -99,6 +101,7 @@ namespace datastrm
       if (dataQ.size() > 0)
       // only read the queue if there is member init
       {
+
          std::unique_lock lock(queueAccessMutex);
          // copy the data and delete it from the package
          auto &refData = dataQ.front();
@@ -111,10 +114,14 @@ namespace datastrm
 
    /// UDP INPUT STREAM ///
 
-   UdpInputStream::UdpInputStream(const char *address) : UdpStream(true)
+   UdpInputStream::UdpInputStream(const int port) : UdpStream(port)
    // construction of Input stream
    {
-      SetAddress(utils::ConvertStringToAddr(address));
+      processDataTask = new std::thread(&UdpInputStream::ProcessDataTask, this);
+   }
+
+   UdpInputStream::~UdpInputStream()
+   {
    }
 
    json UdpInputStream::GetStreamInfo()
@@ -130,14 +137,14 @@ namespace datastrm
    std::pair<uint32_t, std::string> UdpInputStream::RecieveData(int sockfd)
    // perform the reading task and return
    {
-      sockaddr_in clientAddr;
+      struct sockaddr_in clientAddr;
 
       int n;
       char buffer[1000];
-      int len = sizeof(clientAddr);
-
+      socklen_t len = sizeof(clientAddr);
       n = recvfrom(sockfd, buffer, 1000, MSG_WAITALL, (struct sockaddr *)&clientAddr, &len);
       buffer[n] = '\0';
+
       std::pair<uint32_t, std::string> recievedata = {clientAddr.sin_addr.s_addr, std::string(buffer)};
 
       return recievedata;
@@ -145,24 +152,36 @@ namespace datastrm
 
    void UdpInputStream::ProcessDataTask()
    {
+
+      struct sockaddr_in clientAddr;
+      std::pair<uint32_t, std::string> dataPackage;
+
       while (true)
       {
-         std::pair<uint32_t, std::string> dataPackage = UdpInputStream::RecieveData(GetSockfd());
+         dataPackage = RecieveData(GetSockfd());
 
          // wait until the message come and push the message in queue
          PushData(dataPackage);
       }
    }
 
-   UdpOutputStream::UdpOutputStream() : UdpStream(false)
+   UdpOutputStream::UdpOutputStream() : UdpStream()
+   {
+      processDataTask = new std::thread(&UdpOutputStream::ProcessDataTask, this);
+   }
+
+   UdpOutputStream::~UdpOutputStream()
    {
    }
 
    /// UDP OUTPUT STREAM ///
+   // TODO handle return result
    bool UdpOutputStream::SendData(std::pair<uint32_t, std::string> dataPackage)
    {
       SetAddress(dataPackage.first);
       sendto(GetSockfd(), dataPackage.second.c_str(), dataPackage.second.length(), 0, (const struct sockaddr *)GetSocket(), sizeof(*GetSocket()));
+
+      return true;
    }
 
    void UdpOutputStream::ProcessDataTask()
@@ -178,5 +197,3 @@ namespace datastrm
       }
    }
 }
-
-

@@ -3,13 +3,12 @@
 
 #include <iostream>
 
-
 #ifdef _WIN32
 #include <winsock2.h>
 
 #endif
 
-#ifdef __LINUX__
+#ifdef __linux
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -42,30 +41,32 @@ namespace datastrm
 
   class StreamIO
   {
-    public:
+  public:
     virtual void PushData(std::pair<uint32_t, std::string>) = 0;
-  
-    virtual std::pair<uint32_t,std::string> PullData() = 0;
+
+    virtual std::pair<uint32_t, std::string> PullData() = 0;
   };
-  
+
   class UdpStream : public StreamIO
   {
   private:
     // udp communication socket
     std::atomic<int> sockfd;
-    struct sockaddr_in serverAddr; //FIXME - need toe be threadsafe handle 
-
+    struct sockaddr_in serverAddr; // FIXME - need toe be threadsafe handle
 
     // task management initalisation
     std::atomic<bool> isRun;
     std::mutex queueAccessMutex;
-    std::thread processDataTask;
 
     // queue of stream data waiting to be processed
     std::queue<std::pair<uint32_t, std::string>> dataQ;
 
   public:
-    UdpStream(bool);
+    std::thread *processDataTask;
+
+    UdpStream();
+
+    UdpStream(const int);
 
     ~UdpStream();
 
@@ -74,6 +75,7 @@ namespace datastrm
     int GetSockfd();
 
     struct sockaddr_in *GetSocket();
+
 
     void SetAddress(uint32_t);
 
@@ -87,21 +89,23 @@ namespace datastrm
     // pull received data from queue
     std::pair<uint32_t, std::string> PullData() override;
 
-    virtual void ProcessDataTask() = 0;
+    // virtual void ProcessDataTask() = 0;
   };
 
   class UdpInputStream : public UdpStream
   {
   private:
   public:
-    UdpInputStream(const char *address);
+    UdpInputStream(const int);
+
+    ~UdpInputStream();
 
     // converting the info of socket add and port into json object
     json GetStreamInfo();
 
   private:
     // implementing thread for reading the udp data
-    void ProcessDataTask() override;
+    void ProcessDataTask();
 
     // reading the udp message and returning the info of sender addr and data
     static std::pair<uint32_t, std::string> RecieveData(int sockfd);
@@ -113,12 +117,13 @@ namespace datastrm
   public:
     UdpOutputStream();
 
-    // implementing thread for sending the udp data
-    void ProcessDataTask() override;
+    ~UdpOutputStream();
 
   private:
-    // sending the the udp message to the provided address 
-    //NOTE - should be called by ProcessDataTask for thread safe - due to address setting 
+    // implementing thread for sending the udp data
+    void ProcessDataTask();
+    // sending the the udp message to the provided address
+    // NOTE - should be called by ProcessDataTask for thread safe - due to address setting
     bool SendData(std::pair<uint32_t, std::string>);
   };
 }
