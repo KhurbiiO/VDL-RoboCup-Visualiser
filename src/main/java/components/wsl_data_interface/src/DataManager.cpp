@@ -4,20 +4,23 @@
 namespace wsldata
 {
     using namespace stream_config;
-    WslDataManager::WslDataManager(const char *hallWayAddr, const char *streamAddr1, const char *streamAddr2) : hallwayStream(hallWayAddr), inputStream1(streamAddr1), inputStream2(streamAddr2)
+    WslDataManager::WslDataManager(const int hallwayPort, const int stream1port, const int stream2port) : hallwayStream(hallwayPort), inputStream1(stream1port), inputStream2(stream2port)
     {
-        // NOTE - for testing purpose - test stream data processing and verification - stream should only be turn on when connection is completely established
+        // int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+        // // NOTE - for testing purpose - test stream data processing and verification - stream should only be turn on when connection is completely established
         inputStream1.SwitchThreadMode(true);
-        inputStream2.SwitchThreadMode(true);
+        //  inputStream2.SwitchThreadMode(true);
 
         outputStream1.SwitchThreadMode(true);
-        outputStream2.SwitchThreadMode(true);
+        // outputStream2.SwitchThreadMode(true);
 
-        std::thread check1(&WslDataManager::VerifyDataTask,&inputStream1, &outputStream1);
-        std::thread check2(&WslDataManager::VerifyDataTask,&inputStream2, &outputStream2);
+        std::thread check1(&WslDataManager::VerifyDataTask, this, (StreamIO *)&inputStream1, (StreamIO *)&outputStream1);
+        // std::thread check2(&WslDataManager::VerifyDataTask,&inputStream2, &outputStream2);
 
         check1.detach();
-        check2.detach();
+        std::cout << "hello!" << std::endl;
+        // check2.detach();
     }
 
     void WslDataManager::Processing()
@@ -54,10 +57,12 @@ namespace wsldata
         while (true)
         {
             wslData = inputStream->PullData();
-
             if (wslData.second != "None" && WslDataManager::VerifyWslData(wslData.second))
             {
+
                 outputStream->PushData(wslData);
+                std::cout << wslData.second << std::endl;
+
                 wslData = {0, "none"};
             }
         }
@@ -65,6 +70,11 @@ namespace wsldata
 
     bool WslDataManager::VerifyWslData(std::string data)
     {
+        if (!json::accept(data))
+        {
+            return false;
+        }
+
         json wsl_data = json::parse(data);
 
         return true;
