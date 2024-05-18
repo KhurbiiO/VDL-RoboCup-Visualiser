@@ -20,27 +20,23 @@ namespace wsldata
   private:
     State state;
 
-    // // // general thread - hallway
+     // general thread - hallway
     UdpInputStream hallwayStream;
-    // // data threads of both teams
+     // data threads of both teams
     UdpInputStream inputStream1;
     UdpInputStream inputStream2;
 
-    UdpOutputStream outputStream1;
-    UdpOutputStream outputStream2;
-
-    // NOTE - optimize desire of verification code
-    // std::thread check1;
-    // std::thread check2;
+     UdpOutputStream outputStream1;
+     UdpOutputStream outputStream2;
 
   public:
-    WslDataManager(const char *hallWayAddr, const char *streamAddr1, const char *streamAdd2);
+    WslDataManager(const int hallWayAddr, const int streamAddr1, const int streamAdd2);
 
     void Processing();
 
   private:
     // thread for verifying the data and continue the process
-    static void VerifyDataTask(StreamIO *inputStream, StreamIO *outputStream);
+     void VerifyDataTask(StreamIO *inputStream, StreamIO *outputStream);
 
     static bool VerifyWslData(std::string data);
   };
