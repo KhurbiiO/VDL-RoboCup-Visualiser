@@ -29,24 +29,38 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+/**
+ * FXMLController is responsible for controlling the match viewer UI.
+ * It initializes the components, handles data updates, and manages animations.
+ */
 public class FXMLController implements Initializable {
 
+    // Constants
     private final int TEAM_SIZE = 5;
     private final int DIGITAL_MEASUREMENTS_RATIO = 15;
     private final double FIELD_WIDTH = 25d;
     private final double FIELD_HEIGHT = 25d;
+    private final double NONE_FOCUS_OPACITY = 0.5;
+    
+    // Simulation flag
     private boolean isSimulated = true;
+
+    // Teams and ball
     private Team teamA;
     private Team teamB;
     private Ball ball;
 
+    // Current robot view indices
     private int idAView = 0;
     private int idBView = 0;
 
-    private double NONE_FOCUS_OPACITY = 0.5;
-
+    // Coordinate transformer
     CoordsTransformation transformer = new CoordsTransformation();
 
+    // Virtual time elapsed in simulation
+    private int virtualTimeElapsed = 0;
+
+    // FXML UI elements
     @FXML
     Button shiftA;
     @FXML
@@ -63,7 +77,6 @@ public class FXMLController implements Initializable {
     Label batA;
     @FXML
     Label IDA;
-
 
     @FXML
     Button shiftB;
@@ -97,37 +110,53 @@ public class FXMLController implements Initializable {
     @FXML
     Label matchBoard;
 
-    private int shiftNumber(int x){
+    /**
+     * Increments the given number by one and wraps around TEAM_SIZE.
+     * @param x the number to increment.
+     * @return the incremented number.
+     */
+    private int shiftNumber(int x) {
         return ++x % TEAM_SIZE;
     }
 
+    /**
+     * Handles the shift action for team A.
+     * Updates the displayed robot information and highlights the current robot.
+     */
     @FXML
-    private void shiftAFunc(){
+    private void shiftAFunc() {
         ImageView last = getImageViewFromPane(idAView);
         last.setOpacity(NONE_FOCUS_OPACITY);
 
         idAView = shiftNumber(idAView);
-        IDA.setText(Integer.toString(idAView+1));
+        IDA.setText(Integer.toString(idAView + 1));
 
         ImageView next = getImageViewFromPane(idAView);
         next.setOpacity(1);
     }
 
+    /**
+     * Handles the shift action for team B.
+     * Updates the displayed robot information and highlights the current robot.
+     */
     @FXML
-    private void shiftBFunc(){
-
-        ImageView last = getImageViewFromPane(idBView+TEAM_SIZE);
+    private void shiftBFunc() {
+        ImageView last = getImageViewFromPane(idBView + TEAM_SIZE);
         last.setOpacity(NONE_FOCUS_OPACITY);
 
         idBView = shiftNumber(idBView);
-        IDB.setText(Integer.toString(idBView+1));
+        IDB.setText(Integer.toString(idBView + 1));
 
-        ImageView next = getImageViewFromPane(idBView+TEAM_SIZE);
+        ImageView next = getImageViewFromPane(idBView + TEAM_SIZE);
         next.setOpacity(1);
-
     }
 
-    public void updateScreenCoordinate(ImageView view, double[] newPose){
+    /**
+     * Updates the screen coordinates of the given ImageView to the new pose.
+     * @param view the ImageView to update.
+     * @param newPose the new pose coordinates.
+     */
+    public void updateScreenCoordinate(ImageView view, double[] newPose) {
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(view);
         transition.setDuration(Duration.millis(100));
@@ -136,6 +165,11 @@ public class FXMLController implements Initializable {
         transition.play();
     }
 
+    /**
+     * Retrieves the ImageView at the specified index from the field pane.
+     * @param index the index of the ImageView to retrieve.
+     * @return the ImageView at the specified index.
+     */
     private ImageView getImageViewFromPane(int index) {
         Node node = fieldPane.getChildren().get(index);
         if (node instanceof ImageView) {
@@ -145,25 +179,30 @@ public class FXMLController implements Initializable {
         }
     }
 
-    private void updateVisuals(String data, Team team, int indexShift){
-        try{
-            ObjectMapper objectMapper = new ObjectMapper(); 
+    /**
+     * Updates the visuals based on the provided data string.
+     * @param data the JSON data string.
+     * @param team the team to update.
+     * @param indexShift the index shift for the team.
+     */
+    private void updateVisuals(String data, Team team, int indexShift) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(data);
 
             Iterator<JsonNode> robots = jsonNode.get("worldstate").get("robots").elements();
 
-            // TODO: Add ball position estimation
             for (int i = 0; i < TEAM_SIZE; i++) {
                 JsonNode robot = robots.next();
                 Robot player = team.getPlayer(i);
-                
+
                 player.setBallEngaged(robot.get("ballEngaged").asBoolean());
                 player.setBatterPercentage(robot.get("batteryLevel").asDouble());
                 player.setIntention(robot.get("intention").asText());
-                
+
                 Iterator<JsonNode> currentPose_ = robot.get("pose").elements();
                 double currentPose[] = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
-                if (indexShift > 0){
+                if (indexShift > 0) {
                     currentPose = transformer.transformRobotCoords(currentPose);
                 }
                 player.setCurrentPosition(currentPose[0], currentPose[1], currentPose[2]);
@@ -171,9 +210,9 @@ public class FXMLController implements Initializable {
                 Iterator<JsonNode> targetPose_ = robot.get("target pose").elements();
                 double targetPose[] = {targetPose_.next().asDouble(), targetPose_.next().asDouble(), targetPose_.next().asDouble()};
 
-                if (indexShift > 0){
+                if (indexShift > 0) {
                     currentPose = transformer.transformRobotCoords(targetPose);
-                    if (i == idBView){
+                    if (i == idBView) {
                         xPoseB.setText(player.currentPosition.getX().toString());
                         yPoseB.setText(player.currentPosition.getY().toString());
                         zPoseB.setText(player.currentPosition.getZ().toString());
@@ -182,9 +221,8 @@ public class FXMLController implements Initializable {
                         engagedB.setText(player.getBallEngaged() ? "true" : "false");
                         batB.setText(Double.toString(player.getBatterPercentage()));
                     }
-                }
-                else{
-                    if (i == idAView){
+                } else {
+                    if (i == idAView) {
                         xPoseA.setText(player.currentPosition.getX().toString());
                         yPoseA.setText(player.currentPosition.getY().toString());
                         zPoseA.setText(player.currentPosition.getZ().toString());
@@ -194,20 +232,18 @@ public class FXMLController implements Initializable {
                         batA.setText(Double.toString(player.getBatterPercentage()));
                     }
                 }
-                player.setTargetPosition(targetPose[0], targetPose[1], targetPose[2]); //TODO: Look into the necesity of a fluctuations counter
-                // TODO: Add velocity reader
-
-                double screenPose[] = player.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                player.setTargetPosition(targetPose[0], targetPose[1], targetPose[2]);
                 
+                double screenPose[] = player.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+
                 ImageView view = getImageViewFromPane(i + indexShift);
-                view.setFitHeight(fieldPane.getWidth()/DIGITAL_MEASUREMENTS_RATIO);
-                view.setFitWidth(fieldPane.getWidth()/DIGITAL_MEASUREMENTS_RATIO);
+                view.setFitHeight(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
+                view.setFitWidth(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
                 updateScreenCoordinate(view, screenPose);
             }
 
-            // Semi hard coded
-            if (indexShift == 0){
-                try{
+            if (indexShift == 0) {
+                try {
                     Iterator<JsonNode> balls = jsonNode.get("worldstate").get("balls").elements();
                     JsonNode ball_ = balls.next();
                     Iterator<JsonNode> currentPose_ = ball_.get("position").elements();
@@ -219,60 +255,58 @@ public class FXMLController implements Initializable {
                     ball.setConfidence(ball_.get("confidence").asDouble());
 
                     double currentPose[] = ball.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
-                    
 
-                    ImageView view = getImageViewFromPane(2*TEAM_SIZE);
-                    view.setFitHeight(fieldPane.getWidth()/DIGITAL_MEASUREMENTS_RATIO);
-                    view.setFitWidth(fieldPane.getWidth()/DIGITAL_MEASUREMENTS_RATIO);
+                    ImageView view = getImageViewFromPane(2 * TEAM_SIZE);
+                    view.setFitHeight(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
+                    view.setFitWidth(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
                     updateScreenCoordinate(view, currentPose);
+                } catch (NoSuchElementException e) {
+                    // Handle case where no ball is found
                 }
-
-                catch(NoSuchElementException e){}
             }
-
-        }
-        catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Initializes the controller class.
+     * Sets up teams, ball, and UI components. Loads and starts the data update threads.
+     * @param url the location used to resolve relative paths for the root object.
+     * @param rb the resources used to localize the root object.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         teamA = new Team("Wolves", TEAM_SIZE, "/media/team_one.png", "/media/red_dot.png");
         teamB = new Team("Skull", TEAM_SIZE, "/media/team_two.png", "/media/blue_dot.png");
 
         IDA.setText(Integer.toString(1));
         IDB.setText(Integer.toString(1));
-        
 
         ball = new Ball();
 
-        matchBoard.setText(teamA.getTeamName()+" V.S "+teamB.getTeamName());
+        matchBoard.setText(teamA.getTeamName() + " V.S " + teamB.getTeamName());
 
         logoA = new ImageView(teamA.getLogo());
         logoB = new ImageView(teamB.getLogo());
 
-        for (int i = 0; i < TEAM_SIZE; i++){
-            ImageView view = new ImageView(teamA.getPlayer(i).getIcon());  
-            view.setOpacity(NONE_FOCUS_OPACITY);          
+        for (int i = 0; i < TEAM_SIZE; i++) {
+            ImageView view = new ImageView(teamA.getPlayer(i).getIcon());
+            view.setOpacity(NONE_FOCUS_OPACITY);
             fieldPane.getChildren().add(view);
         }
 
-        for (int i = 0; i < TEAM_SIZE; i++){
-            ImageView view = new ImageView(teamB.getPlayer(i).getIcon());  
-            view.setOpacity(NONE_FOCUS_OPACITY);          
+        for (int i = 0; i < TEAM_SIZE; i++) {
+            ImageView view = new ImageView(teamB.getPlayer(i).getIcon());
+            view.setOpacity(NONE_FOCUS_OPACITY);
             fieldPane.getChildren().add(view);
         }
 
         ImageView view = new ImageView(ball.getIcon());
         fieldPane.getChildren().add(view);
 
-        // TODO: Start update data stream threads
-
-        
-        if (isSimulated){
-            String teamAPath = getClass().getResource("/scripts/CAMBADA-TUE/Team.A.msl").toExternalForm().substring(5); //TODO: Remove hardcode substring
+        if (isSimulated) {
+            String teamAPath = getClass().getResource("/scripts/CAMBADA-TUE/Team.A.msl").toExternalForm().substring(5);
             String teamBPath = getClass().getResource("/scripts/CAMBADA-TUE/Team.B.msl").toExternalForm().substring(5);
 
             try {
@@ -281,15 +315,22 @@ public class FXMLController implements Initializable {
                 String teamBString = Files.readString(Paths.get(teamBPath));
                 Iterator<JsonNode> teamBData = new ObjectMapper().readTree(teamBString).elements();
 
+                if (teamAData.hasNext()) {
+                    updateVisuals(teamAData.next().toString(), teamA, 0);
+                }
+                if (teamBData.hasNext()) {
+                    updateVisuals(teamBData.next().toString(), teamB, TEAM_SIZE);
+                }
+
                 Timeline updateUI = new Timeline(
-                    new KeyFrame(Duration.millis(50d), event -> {
-                        if(teamAData.hasNext()){
-                            updateVisuals(teamAData.next().toString(), teamA, 0);
-                        }
-                        if(teamBData.hasNext()){
-                            updateVisuals(teamBData.next().toString(), teamB, TEAM_SIZE);
-                        }
-                    }));
+                        new KeyFrame(Duration.millis(50d), event -> {
+                            if (teamAData.hasNext()) {
+                                updateVisuals(teamAData.next().toString(), teamA, 0);
+                            }
+                            if (teamBData.hasNext()) {
+                                updateVisuals(teamBData.next().toString(), teamB, TEAM_SIZE);
+                            }
+                        }));
                 updateUI.setCycleCount(Timeline.INDEFINITE);
                 updateUI.play();
             } catch (IOException e) {

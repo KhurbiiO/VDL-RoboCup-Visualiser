@@ -43,7 +43,7 @@ public class Position {
     public double[] getGridVVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
         double coordinate_[] = {map(getX(), (realWidth/2), (-realWidth/2), digitalWidth, 0d), 
                                 map(getY(), (realHeight/2), (-realHeight/2), digitalHeight, 0d), 
-                                getY()};
+                                getZ()};
         return coordinate_;
     }
 
