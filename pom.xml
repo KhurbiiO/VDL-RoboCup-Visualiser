@@ -37,6 +37,12 @@
             <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.10</version>
+
+    </dependency>
     </dependencies>
 
     <build>
@@ -139,6 +145,39 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+                <id>my-execute</id>
+                <phase>run</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>com.App</mainClass>
+                </configuration>
+
+            </execution>    
+            <execution>
+              <id>generate-jni</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal> java</goal>
+              </goals>
+              <configuration>
+                <mainClass>org.bytedeco.javacpp.tools.Builder</mainClass>
+                <arguments>
+                  <argument> </argument>
+                </arguments>
+                <classpathScope>compile</classpathScope>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
         </plugins>
     </build>
 </project>
