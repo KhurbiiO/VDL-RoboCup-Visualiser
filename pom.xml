@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>visualizer.match_viewer</groupId>
@@ -25,7 +27,7 @@
             <artifactId>javafx-media</artifactId>
             <version>11</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.7.2</version>
@@ -38,11 +40,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>1.5.10</version>
-
-    </dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.10</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,9 +56,11 @@
                     <execution>
                         <phase>package</phase>
                         <configuration>
-                            <tasks>
-                                <echo file="${project.build.directory}/runme.bat">start jlink-image\bin\javaw -jar modules\${project.artifactId}-${project.version}.jar</echo>
-                            </tasks>
+                            <target>
+                                <echo file="${project.build.directory}/runme.bat">start
+                                    jlink-image\bin\javaw -jar
+                                    modules\${project.artifactId}-${project.version}.jar</echo>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -145,38 +149,32 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>3.0.0</version>
-          <executions>
-            <execution>
-                <id>my-execute</id>
-                <phase>run</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>com.App</mainClass>
-                </configuration>
 
-            </execution>    
-            <execution>
-              <id>generate-jni</id>
-              <phase>generate-sources</phase>
-              <goals>
-                <goal> java</goal>
-              </goals>
-              <configuration>
-                <mainClass>org.bytedeco.javacpp.tools.Builder</mainClass>
-                <arguments>
-                  <argument> </argument>
-                </arguments>
-                <classpathScope>compile</classpathScope>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-javacpp-wrapper</id>
+                        <phase>generate-wrapper</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.bytedeco.javacpp.tools.Builder</mainClass>
+                    <!-- updating the name of the argument and the classpath based on the java wrapper changing-->
+                    <arguments>
+                        <argument>App</argument>
+                    </arguments>
+                    <classpath>
+                        <path>./main/java/components/src/target/classes</path>
+                    </classpath>
+                    <classpathScope>compile</classpathScope>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>

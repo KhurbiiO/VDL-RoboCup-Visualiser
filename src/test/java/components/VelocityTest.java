@@ -17,6 +17,7 @@ public class VelocityTest {
     @Test
     public void itDoesCorrectOriginTranslationForAnObject(){
         double[] ballPosition = {3, -2, 0.5};
+        
         double[] velocityVector = {-0.000472, -0.000724, 0.001935};
 
         double[] expectedVelocity = {2.999528, -2.000724, 0.501935};
