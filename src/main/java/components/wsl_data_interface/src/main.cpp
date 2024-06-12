@@ -13,7 +13,14 @@ int main()
   // Test test;
     wsldata::WslDataManager manager(hallway_port, stream1_port, stream2_port);
 
-   while(true);
+   while(true)
+   {
+      std::string data =  manager.GetDataStream(0);
+      if(data != "")
+      {
+        std::cout << data << std::endl;
+      }
+   };
   // struct sockaddr_in serverAddr;
 
   // // create socket for udp communication

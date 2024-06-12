@@ -4,23 +4,13 @@
 namespace wsldata
 {
     using namespace stream_config;
-    WslDataManager::WslDataManager(const int hallwayPort, const int stream1port, const int stream2port) : hallwayStream(hallwayPort), inputStream1(stream1port), inputStream2(stream2port)
+    WslDataManager::WslDataManager(const int hallwayPort, const int port1, const int port2) : hallwayStream(hallwayPort), streams{UdpStream(port1), UdpStream(port2)}
     {
         // int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-        // // NOTE - for testing purpose - test stream data processing and verification - stream should only be turn on when connection is completely established
-        inputStream1.SwitchThreadMode(true);
-        //  inputStream2.SwitchThreadMode(true);
-
-        outputStream1.SwitchThreadMode(true);
-        // outputStream2.SwitchThreadMode(true);
-
-        std::thread check1(&WslDataManager::VerifyDataTask, this, (StreamIO *)&inputStream1, (StreamIO *)&outputStream1);
-        // std::thread check2(&WslDataManager::VerifyDataTask,&inputStream2, &outputStream2);
-
-        check1.detach();
+        // NOTE - for testing purpose - test stream data processing and verification - stream should only be turn on when connection is completely established
+        streams[0].SwitchThreadMode(true);
         std::cout << "hello!" << std::endl;
-        // check2.detach();
     }
 
     void WslDataManager::Processing()
@@ -45,27 +35,24 @@ namespace wsldata
         }
     }
 
-    void WslDataManager::VerifyDataTask(StreamIO *inputStream, StreamIO *outputStream)
+    std::string WslDataManager::GetDataStream(uint8_t streamCode)
     {
-        if (inputStream == nullptr || outputStream == nullptr)
+        if (streamCode >= 2)
         {
-            return;
+            return "";
         }
 
-        std::pair<uint32_t, std::string> wslData = {0, "none"};
+        std::string data = "";
+        bool result = false;
 
-        while (true)
+        while (streams[0].GetSize() > 0 && !result)
         {
-            wslData = inputStream->PullData();
-            if (wslData.second != "None" && WslDataManager::VerifyWslData(wslData.second))
-            {
-
-                outputStream->PushData(wslData);
-                std::cout << wslData.second << std::endl;
-
-                wslData = {0, "none"};
-            }
+            data = streams[0].PullData();
+            // verify data - keep geting new data if old data is not valid
+            result = WslDataManager::VerifyWslData(data);
         }
+
+        return data;
     }
 
     bool WslDataManager::VerifyWslData(std::string data)
@@ -76,7 +63,6 @@ namespace wsldata
         }
 
         json wsl_data = json::parse(data);
-
         return true;
     }
 

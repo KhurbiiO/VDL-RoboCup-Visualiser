@@ -2,7 +2,7 @@
 #define DATA_MANAGER_HPP
 
 #include "DataStream.hpp"
-
+#include <array>
 namespace wsldata
 {
   using namespace datastrm;
@@ -20,24 +20,19 @@ namespace wsldata
   private:
     State state;
 
-     // general thread - hallway
-    UdpInputStream hallwayStream;
-     // data threads of both teams
-    UdpInputStream inputStream1;
-    UdpInputStream inputStream2;
+    // general thread - hallway
+    UdpStream hallwayStream;
 
-     UdpOutputStream outputStream1;
-     UdpOutputStream outputStream2;
+    // data threads of both teams
+    std::array<UdpStream, 2> streams;
 
   public:
     WslDataManager(const int hallWayAddr, const int streamAddr1, const int streamAdd2);
 
     void Processing();
-
+    
+    std::string GetDataStream(uint8_t streamCode);
   private:
-    // thread for verifying the data and continue the process
-     void VerifyDataTask(StreamIO *inputStream, StreamIO *outputStream);
-
     static bool VerifyWslData(std::string data);
   };
 }
