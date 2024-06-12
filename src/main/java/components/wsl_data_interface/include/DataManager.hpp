@@ -3,8 +3,13 @@
 
 #include "DataStream.hpp"
 #include <array>
+
+std::string GetLibraryInfo();
+
 namespace wsldata
 {
+  std::string GetNamspaceInfo();
+
   using namespace datastrm;
   enum State
   {
@@ -14,6 +19,7 @@ namespace wsldata
     HANDLEERROR
 
   };
+
 
   class WslDataManager
   {
@@ -29,9 +35,12 @@ namespace wsldata
   public:
     WslDataManager(const int hallWayAddr, const int streamAddr1, const int streamAdd2);
 
+    std::string GetInfo();
+
     void Processing();
-    
+
     std::string GetDataStream(uint8_t streamCode);
+
   private:
     static bool VerifyWslData(std::string data);
   };

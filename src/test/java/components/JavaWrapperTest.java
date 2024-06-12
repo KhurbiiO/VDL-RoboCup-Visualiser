@@ -12,7 +12,8 @@ public class JavaWrapperTest {
 
     @Test
     void TestHelloTest() {
-        interface_wrapper.hello_test();
+       String info = interface_wrapper.GetLibraryInfo();
+       System.out.println(info);
     }
 
 }

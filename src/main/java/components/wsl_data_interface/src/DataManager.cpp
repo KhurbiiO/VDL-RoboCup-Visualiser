@@ -1,8 +1,18 @@
 #include "DataManager.hpp"
 #include "Config.hpp"
 
+std::string GetLibraryInfo()
+{
+    return std::string("hello from data manager library");
+}
+
 namespace wsldata
 {
+    std::string GetNamespaceInfo()
+    {
+        return std::string("hello from wsldata namspace");
+    }
+
     using namespace stream_config;
     WslDataManager::WslDataManager(const int hallwayPort, const int port1, const int port2) : hallwayStream(hallwayPort), streams{UdpStream(port1), UdpStream(port2)}
     {
@@ -11,6 +21,11 @@ namespace wsldata
         // NOTE - for testing purpose - test stream data processing and verification - stream should only be turn on when connection is completely established
         streams[0].SwitchThreadMode(true);
         std::cout << "hello!" << std::endl;
+    }
+    
+    std::string GetInfo()
+    {
+        return std::string("hello from wsl data manager!");
     }
 
     void WslDataManager::Processing()
@@ -65,5 +80,5 @@ namespace wsldata
         json wsl_data = json::parse(data);
         return true;
     }
-
+    
 }
