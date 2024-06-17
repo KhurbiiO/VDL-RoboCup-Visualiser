@@ -17,6 +17,7 @@ import components.CoordsTransformation;
 import components.Robot;
 import components.Team;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -44,6 +46,7 @@ public class FXMLController implements Initializable {
     
     // Simulation flag
     private boolean isSimulated = true;
+    private Boolean isFlipped = false;
 
     // Teams and ball
     private Team teamA;
@@ -56,9 +59,6 @@ public class FXMLController implements Initializable {
 
     // Coordinate transformer
     CoordsTransformation transformer = new CoordsTransformation();
-
-    // Virtual time elapsed in simulation
-    private int virtualTimeElapsed = 0;
 
     // FXML UI elements
     @FXML
@@ -108,6 +108,8 @@ public class FXMLController implements Initializable {
     @FXML
     GridPane matchStatsPane;
     @FXML
+    AnchorPane gamePane;
+    @FXML
     Label matchBoard;
 
     /**
@@ -151,6 +153,77 @@ public class FXMLController implements Initializable {
         next.setOpacity(1);
     }
 
+
+    private void centerObjectAnchor(AnchorPane parent, Pane node, boolean horizontal, boolean vertical) {
+        if (horizontal) {
+            AnchorPane.setLeftAnchor(node, (parent.getWidth() - node.getPrefWidth()) / 2);
+            gamePane.widthProperty().addListener((obs, oldVal, newVal) -> {
+                AnchorPane.setLeftAnchor(fieldPane, (newVal.doubleValue() - node.getPrefWidth()) / 2);
+            });
+        }
+        if (vertical) {
+            AnchorPane.setTopAnchor(node, (parent.getHeight() - node.getPrefHeight()) / 2);
+            parent.heightProperty().addListener((obs, oldVal, newVal) -> {
+                AnchorPane.setTopAnchor(node, (newVal.doubleValue() - node.getPrefHeight()) / 2);
+            });
+        }
+    }
+    
+
+    private void scalePaneSize() {
+        // Unbind
+        fieldPane.prefHeightProperty().unbind();
+        fieldPane.prefWidthProperty().unbind();
+        
+        if (isFlipped) {
+            fieldPane.prefHeightProperty().bind(gamePane.widthProperty().multiply(0.90));
+            fieldPane.prefWidthProperty().bind(gamePane.heightProperty().multiply(0.75));
+
+            centerObjectAnchor(gamePane, fieldPane, true, true);
+
+
+            // fieldPane.layoutYProperty().bind(gamePane.heightProperty().multiply(0.75));
+            
+
+            // centerObjectAnchor(gamePane, fieldPane, true, true);    
+
+            // gamePane.setTopAnchor(fieldPane, (gamePane.getHeight() - fieldPane.getPrefHeight()) / 2);
+            // gamePane.setLeftAnchor(fieldPane, (gamePane.getWidth() - fieldPane.getPrefWidth()) / 2);
+
+            // gamePane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            //     AnchorPane.setTopAnchor(fieldPane, (newVal.doubleValue() - fieldPane.getHeight()) / 2);
+            // });
+            // gamePane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            //     AnchorPane.setLeftAnchor(fieldPane, (newVal.doubleValue() - fieldPane.getWidth()) / 2);
+            // });
+
+        } else {
+            fieldPane.prefWidthProperty().bind(gamePane.widthProperty().multiply(0.4));
+            fieldPane.prefHeightProperty().bind(gamePane.heightProperty().multiply(0.75));
+
+            centerObjectAnchor(gamePane, fieldPane, true, true);
+
+
+            // gamePane.setTopAnchor(fieldPane, (gamePane.getHeight() - fieldPane.getPrefHeight()) / 2);
+            // gamePane.setLeftAnchor(fieldPane, (gamePane.getWidth() - fieldPane.getPrefWidth()) / 2);
+
+            // gamePane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            //     AnchorPane.setTopAnchor(fieldPane, (newVal.doubleValue() - fieldPane.getHeight()) / 2);
+            // });
+            // gamePane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            //     AnchorPane.setLeftAnchor(fieldPane, (newVal.doubleValue() - fieldPane.getWidth()) / 2);
+            // });
+        }
+    }
+
+    // Assuming you have a method to flip the field
+    @FXML
+    private void flipField() {
+        isFlipped = !isFlipped;
+        fieldPane.setRotate(isFlipped ? -90 : 0);
+        scalePaneSize();
+    }
+
     /**
      * Updates the screen coordinates of the given ImageView to the new pose.
      * @param view the ImageView to update.
@@ -179,6 +252,45 @@ public class FXMLController implements Initializable {
         }
     }
 
+    public static double calculateAngleBetweenPoints(double x1, double y1, double x2, double y2) {
+        // Calculate the dot product
+        double dotProduct = x1 * x2 + y1 * y2;
+        
+        // Calculate the magnitudes
+        double magnitudeA = Math.sqrt(x1 * x1 + y1 * y1);
+        double magnitudeB = Math.sqrt(x2 * x2 + y2 * y2);
+        
+        // Calculate the cosine of the angle
+        double cosTheta = dotProduct / (magnitudeA * magnitudeB);
+        
+        // Calculate the angle in radians
+        double angle = Math.acos(cosTheta);
+
+        // Convert the angle to degrees
+        double angleInDegrees = Math.toDegrees(angle);
+
+        
+        return angleInDegrees;
+    }
+
+    public void setTargetAngle(ImageView view, double targetAngle) {
+        double currentAngle = view.getRotate();
+
+        // Calculate the shortest path to the target angle
+        double angleDifference = targetAngle - currentAngle;
+        if (angleDifference > 180) {
+            angleDifference -= 360;
+        } else if (angleDifference < -180) {
+            angleDifference += 360;
+        }
+
+        // Create and play the RotateTransition
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), view);
+        rotateTransition.setByAngle(angleDifference);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.play();
+    }
+
     /**
      * Updates the visuals based on the provided data string.
      * @param data the JSON data string.
@@ -204,6 +316,26 @@ public class FXMLController implements Initializable {
                 double currentPose[] = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
                 if (indexShift > 0) {
                     currentPose = transformer.transformRobotCoords(currentPose);
+                    if (i == idBView){
+                        xPoseB.setText("X: "+player.currentPosition.getX().toString());
+                        yPoseB.setText("Y: "+player.currentPosition.getY().toString());
+                        zPoseB.setText("Z: "+player.currentPosition.getZ().toString());
+
+                        intentB.setText("Intent: "+player.getIntention());
+                        engagedB.setText("X: "+(player.getBallEngaged() ? "true" : "false"));
+                        batB.setText("Bat: "+Double.toString(player.getBatterPercentage()));
+                    }
+                }
+                else{
+                    if (i == idAView){
+                        xPoseA.setText("X: "+player.currentPosition.getX().toString());
+                        yPoseA.setText("Y: "+player.currentPosition.getY().toString());
+                        zPoseA.setText("Z: "+player.currentPosition.getZ().toString());
+
+                        intentA.setText("Intent: "+player.getIntention());
+                        engagedA.setText("X: "+(player.getBallEngaged() ? "true" : "false"));
+                        batA.setText("Bat: "+Double.toString(player.getBatterPercentage()));
+                    }
                 }
                 player.setCurrentPosition(currentPose[0], currentPose[1], currentPose[2]);
 
@@ -211,34 +343,26 @@ public class FXMLController implements Initializable {
                 double targetPose[] = {targetPose_.next().asDouble(), targetPose_.next().asDouble(), targetPose_.next().asDouble()};
 
                 if (indexShift > 0) {
-                    currentPose = transformer.transformRobotCoords(targetPose);
-                    if (i == idBView) {
-                        xPoseB.setText(player.currentPosition.getX().toString());
-                        yPoseB.setText(player.currentPosition.getY().toString());
-                        zPoseB.setText(player.currentPosition.getZ().toString());
-
-                        intentB.setText(player.getIntention());
-                        engagedB.setText(player.getBallEngaged() ? "true" : "false");
-                        batB.setText(Double.toString(player.getBatterPercentage()));
-                    }
-                } else {
-                    if (i == idAView) {
-                        xPoseA.setText(player.currentPosition.getX().toString());
-                        yPoseA.setText(player.currentPosition.getY().toString());
-                        zPoseA.setText(player.currentPosition.getZ().toString());
-
-                        intentA.setText(player.getIntention());
-                        engagedA.setText(player.getBallEngaged() ? "true" : "false");
-                        batA.setText(Double.toString(player.getBatterPercentage()));
-                    }
+                    targetPose = transformer.transformRobotCoords(targetPose);
                 }
                 player.setTargetPosition(targetPose[0], targetPose[1], targetPose[2]);
-                
-                double screenPose[] = player.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+        
+                double screenPose[];
+                if (isFlipped){ 
+                    screenPose = player.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                }
+                else{
+                    screenPose = player.currentPosition.getGridHVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                }
 
                 ImageView view = getImageViewFromPane(i + indexShift);
                 view.setFitHeight(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
                 view.setFitWidth(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
+
+                // Rotate rotate = new Rotate();
+                // view.getTransforms().add(rotate);
+
+                setTargetAngle(view, (calculateAngleBetweenPoints(player.currentPosition.getX(), player.currentPosition.getY(), player.targetPosition.getX(), player.targetPosition.getY())));
                 updateScreenCoordinate(view, screenPose);
             }
 
@@ -254,7 +378,13 @@ public class FXMLController implements Initializable {
 
                     ball.setConfidence(ball_.get("confidence").asDouble());
 
-                    double currentPose[] = ball.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                    double currentPose[];
+                    if (isFlipped){ 
+                        currentPose = ball.currentPosition.getGridVVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                    }
+                    else{
+                        currentPose = ball.currentPosition.getGridHVector(FIELD_WIDTH, FIELD_HEIGHT, fieldPane.getWidth(), fieldPane.getHeight());
+                    }
 
                     ImageView view = getImageViewFromPane(2 * TEAM_SIZE);
                     view.setFitHeight(fieldPane.getWidth() / DIGITAL_MEASUREMENTS_RATIO);
@@ -277,8 +407,14 @@ public class FXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        teamA = new Team("Wolves", TEAM_SIZE, "/media/team_one.png", "/media/red_dot.png");
-        teamB = new Team("Skull", TEAM_SIZE, "/media/team_two.png", "/media/blue_dot.png");
+        scalePaneSize();
+
+        // Add listeners to keep the Node centered when the size of the AnchorPane changes
+        gamePane.heightProperty().addListener((obs, oldVal, newVal) -> centerObjectAnchor(gamePane, fieldPane, false, true));
+        gamePane.widthProperty().addListener((obs, oldVal, newVal) -> centerObjectAnchor(gamePane, fieldPane, true, false));
+
+        teamA = new Team("Wolves", TEAM_SIZE, "/media/team_one.png", "/media/red_dot_arrow.png");
+        teamB = new Team("Skull", TEAM_SIZE, "/media/team_two.png", "/media/blue_dot_arrow.png");
 
         IDA.setText(Integer.toString(1));
         IDB.setText(Integer.toString(1));

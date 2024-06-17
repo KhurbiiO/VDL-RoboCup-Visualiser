@@ -13,30 +13,31 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualizer.match_viewer.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #524f4a;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualizer.match_viewer.FXMLController">
     <children>
-      <GridPane prefHeight="630.0" prefWidth="660.0" style="-fx-background-color: #b3f2c4;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="330.0" AnchorPane.topAnchor="10.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="26.0" prefWidth="20.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="601.0" minWidth="10.0" percentWidth="48.0" prefWidth="601.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="26.0" prefWidth="20.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="197.0" minHeight="10.0" percentHeight="20.0" prefHeight="156.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="530.0" minHeight="10.0" percentHeight="70.0" prefHeight="377.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="173.0" minHeight="10.0" percentHeight="10.0" prefHeight="97.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <AnchorPane fx:id="gamePane" prefHeight="626.0" prefWidth="666.0" style="-fx-background-color: #9097a3;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="330.0" AnchorPane.topAnchor="20.0">
          <children>
-            <Pane fx:id="fieldPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #60BC8E;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="matchBoard" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="TeamA V.S TeamB" textFill="#fafafa" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Label fx:id="matchBoard" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="TeamA V.S TeamB" textFill="#fafafa" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="20.0">
                <font>
-                  <Font size="30.0" />
+                  <Font name="System Bold" size="30.0" />
                </font>
             </Label>
+            <Text fill="#fafafa" layoutX="294.0" layoutY="570.0" stroke="#e02b2b" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" textAlignment="CENTER" AnchorPane.bottomAnchor="32.67500114440918" AnchorPane.leftAnchor="294.0" AnchorPane.rightAnchor="292.5250015258789">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <Pane fx:id="fieldPane" layoutX="187.0" layoutY="101.0" prefHeight="408.0" prefWidth="277.0" style="-fx-background-color: #60BC8E;" styleClass="root" stylesheets="@../styles/field.css" />
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#flipField" prefHeight="44.0" prefWidth="44.0" text="↺ " AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
          </children>
-      </GridPane>
-      <GridPane fx:id="matchStatsPane" alignment="CENTER" layoutX="737.0" layoutY="-4.0" prefHeight="664.0" prefWidth="318.0" style="-fx-background-color: #83ccba;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      </AnchorPane>
+      <GridPane fx:id="matchStatsPane" alignment="CENTER" prefHeight="664.0" prefWidth="318.0" style="-fx-background-color: #524f4a;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="5.0" prefWidth="25.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="41.0" prefWidth="135.0" />
@@ -50,17 +51,19 @@
             <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="5.0" prefHeight="228.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="642.0" minHeight="10.0" prefHeight="228.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="5.0" prefHeight="149.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="3.0" prefHeight="149.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <ImageView fx:id="logoA" fitHeight="125.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <image>
                   <Image url="@../media/team_one.png" />
-               </image></ImageView>
+               </image>
+            </ImageView>
             <ImageView fx:id="logoB" fitHeight="125.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <image>
                   <Image url="@../media/team_two.png" />
-               </image></ImageView>
+               </image>
+            </ImageView>
             <Label fx:id="scoreA" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="0" textFill="#fafafa" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="69.0" />
@@ -76,7 +79,7 @@
                   <Font size="69.0" />
                </font>
             </Label>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #b87d21;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
@@ -89,130 +92,104 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="X:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" fx:id="xPoseA">
+                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa" fx:id="xPoseA">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Y:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="yPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="yPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Z:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="zPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="zPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Int:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="intentA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="intentA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Engaged:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="engagedA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="engagedA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Battery:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="batA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="batA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="ID:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="IDA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="IDA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <padding>
+                  <Insets left="8.0" top="10.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: #b87d25;" GridPane.columnIndex="3" GridPane.rowIndex="4">
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="shiftB" mnemonicParsing="false" onAction="#shiftBFunc" text="Switch B">
+                        <Button fx:id="shiftB" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#shiftBFunc" text="Switch B" textAlignment="CENTER">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -221,124 +198,95 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="X:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" fx:id="xPoseB">
+                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa" fx:id="xPoseB">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Y:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="yPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="yPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Z:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="zPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="zPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Int:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="intentB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="intentB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Engaged:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="engagedB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="engagedB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Battery:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="batB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="batB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="ID:">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="IDB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label">
+                        <Label fx:id="IDB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
                         </Label>
                      </children>
                   </HBox>
                </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <padding>
+                  <Insets left="5.0" top="10.0" />
+               </padding>
             </VBox>
          </children>
       </GridPane>
