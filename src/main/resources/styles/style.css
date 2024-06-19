@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'Digital-7';
+    src: url('../styles/fonts/digital-7.ttf');
+}
+
+.field {
+    -fx-background-color:#60BC8E;
+    -fx-background-image: url("../media/field_1.png");
+    -fx-background-size: 100% 100%;; 
+    -fx-background-position: center; 
+    -fx-background-repeat: no-repeat;
+}
+
+.teamflag{
+    -fx-background-color: #db5959;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-pref-height: 100px;
+    -fx-pref-width: 30px;
+}
+
+.teamlogo{
+    -fx-background-color:#858886;
+    -fx-border-color: black;
+    -fx-background-image: url("../media/team_one.png");
+    -fx-background-size: 100% 100%;; 
+    -fx-background-position: center; 
+    -fx-background-repeat: no-repeat;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-pref-height: 100px;
+    -fx-pref-width: 100px;
+}
+
+.scoreboard{
+    -fx-background-color:#858886;
+    -fx-font-family: Digital-7;
+    -fx-font-size: 60px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-pref-height: 100px;
+    -fx-pref-width: 80px;
+    -fx-alignment: center;
+}
+
+.timeboard{
+    -fx-background-color:#858886;
+    -fx-font-family: Digital-7;
+    -fx-font-size: 40px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-alignment: center;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 180px;
+    -fx-alignment: center;
+}
+
+.refboard{
+    -fx-background-color:#858886;
+    -fx-font-family: Digital-7;
+    -fx-font-size: 25px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-alignment: center;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 220px;
+    -fx-alignment: center; 
+}
+
+.button{
+    -fx-background-color:#858886;
+    -fx-border-color: black;
+
+}
+
+.hcontainer{
+    -fx-spacing: 5px;
+}
+
+.vcontainer{
+    -fx-spacing: 20;
+}

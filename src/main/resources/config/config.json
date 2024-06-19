@@ -1,0 +1,37 @@
+{
+	"type": "MSLRBCONF",
+	"description": "MSL RefBox configuration file",
+	"networking":
+	{
+		"refboxIP": "127.0.0.1",
+        "refboxPort": 12345,
+        "basestationIP" : "127.0.0.1",
+		"basestationPort": 28097,
+
+        "teamA" : {
+            "ipaddress" : "127.0.0.1"
+        },
+        "teamB" : {
+            "ipaddress" : "127.0.0.1"
+        }
+	},
+	"appearance":
+	{
+
+        "field" : {
+            "width" : 20,
+            "heigh" : 20
+        },
+
+        "teamA" : {
+		    "name": "TeamA",
+            "size" : 5,
+            "flagcolor" : "#007BA7"
+        },
+        "teamB" : {
+		    "name": "TeamA",
+            "size" : 5,
+            "flagcolor" : "#C240BC"
+        }
+	}
+}

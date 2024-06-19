@@ -1,294 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #524f4a;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualizer.match_viewer.FXMLController">
-    <children>
-      <AnchorPane fx:id="gamePane" prefHeight="626.0" prefWidth="666.0" style="-fx-background-color: #9097a3;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="330.0" AnchorPane.topAnchor="20.0">
+<AnchorPane id="AnchorPane" prefHeight="515.0" prefWidth="1000.0" style="-fx-background-color: #524f4a;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualizer.match_viewer.FXMLController">
+   <children>
+      <Pane fx:id="field" layoutX="121.0" layoutY="-53.0" prefHeight="670.0" prefWidth="500.0" rotate="90.0" styleClass="field" stylesheets="@../styles/style.css" />
+      <VBox layoutX="743.0" layoutY="35.0" prefHeight="500.0" prefWidth="250.0" styleClass="vcontainer" stylesheets="@../styles/style.css">
          <children>
-            <Label fx:id="matchBoard" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="TeamA V.S TeamB" textFill="#fafafa" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="20.0">
-               <font>
-                  <Font name="System Bold" size="30.0" />
-               </font>
-            </Label>
-            <Text fill="#fafafa" layoutX="294.0" layoutY="570.0" stroke="#e02b2b" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" textAlignment="CENTER" AnchorPane.bottomAnchor="32.67500114440918" AnchorPane.leftAnchor="294.0" AnchorPane.rightAnchor="292.5250015258789">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Text>
-            <Pane fx:id="fieldPane" layoutX="187.0" layoutY="101.0" prefHeight="408.0" prefWidth="277.0" style="-fx-background-color: #60BC8E;" styleClass="root" stylesheets="@../styles/field.css" />
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#flipField" prefHeight="44.0" prefWidth="44.0" text="↺ " AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-      <GridPane fx:id="matchStatsPane" alignment="CENTER" prefHeight="664.0" prefWidth="318.0" style="-fx-background-color: #524f4a;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="5.0" prefWidth="25.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="41.0" prefWidth="135.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" percentWidth="8.0" prefWidth="38.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="41.0" prefWidth="135.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" percentWidth="5.0" prefWidth="25.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="326.0" minHeight="10.0" percentHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="22.0" prefHeight="141.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="5.0" prefHeight="228.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" prefHeight="228.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="642.0" minHeight="10.0" percentHeight="3.0" prefHeight="149.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <ImageView fx:id="logoA" fitHeight="125.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../media/team_one.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="logoB" fitHeight="125.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../media/team_two.png" />
-               </image>
-            </ImageView>
-            <Label fx:id="scoreA" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" text="0" textFill="#fafafa" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="69.0" />
-               </font>
-            </Label>
-            <Label fx:id="scoreB" alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="34.0" prefWidth="3.0" text="0" textFill="#fafafa" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="69.0" />
-               </font>
-            </Label>
-            <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="34.0" prefWidth="3.0" text="-" textFill="#fafafa" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="69.0" />
-               </font>
-            </Label>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #b87d21;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="hcontainer" stylesheets="@../styles/style.css">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Label fx:id="scoreTeamA" styleClass="scoreboard" stylesheets="@../styles/style.css" text="0" />
+                  <Pane fx:id="flagTeamA" prefHeight="100.0" prefWidth="50.0" styleClass="teamflag" stylesheets="@../styles/style.css" />
+                  <AnchorPane fx:id="logoTeamA" prefHeight="200.0" prefWidth="200.0" styleClass="teamlogo" stylesheets="@../styles/style.css">
                      <children>
-                        <Button fx:id="shiftA" mnemonicParsing="false" onAction="#shiftAFunc" text="Switch A">
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </Button>
+                        <Circle fx:id="connectionTeamA" fill="#ff271f" layoutX="53.0" layoutY="47.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                      </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa" fx:id="xPoseA">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="yPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="zPoseA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="intentA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="engagedA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="batA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="IDA" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
+                  </AnchorPane>
                </children>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <padding>
-                  <Insets left="8.0" top="10.0" />
-               </padding>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: #b87d25;" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            </HBox>
+            <Label fx:id="timer" prefHeight="56.0" prefWidth="192.0" styleClass="timeboard" stylesheets="@../styles/style.css" text="0.00" />
+            <Label fx:id="refBoard" prefHeight="56.0" prefWidth="192.0" styleClass="refboard" stylesheets="@../styles/style.css" text="Magenta repair out" />
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="hcontainer" stylesheets="@../styles/style.css">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Label fx:id="scoreTeamB" styleClass="scoreboard" stylesheets="@../styles/style.css" text="0" />
+                  <Pane fx:id="flagTeamB" prefHeight="100.0" prefWidth="117.0" styleClass="teamflag" stylesheets="@../styles/style.css" />
+                  <AnchorPane fx:id="logoTeamB" prefHeight="200.0" prefWidth="200.0" styleClass="teamlogo" stylesheets="@../styles/style.css">
                      <children>
-                        <Button fx:id="shiftB" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#shiftBFunc" text="Switch B" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </Button>
+                        <Circle fx:id="connectionTeamB" fill="#ff2b1f" radius="6.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                      </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa" fx:id="xPoseB">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="yPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="zPoseB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="intentB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="engagedB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="batB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="IDB" alignment="TOP_CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Label" textFill="#fafafa">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
+                  </AnchorPane>
                </children>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <padding>
-                  <Insets left="5.0" top="10.0" />
-               </padding>
-            </VBox>
+            </HBox>
          </children>
-      </GridPane>
-    </children>
+      </VBox>
+      <Button layoutX="957.0" layoutY="551.0" mnemonicParsing="false" stylesheets="@../styles/style.css" text="⟳" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="13.0" />
+      <MenuButton layoutX="743.0" layoutY="560.0" mnemonicParsing="false" styleClass="button" stylesheets="@../styles/style.css" text="CONFIG" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="50.0">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Team A" />
+          <MenuItem mnemonicParsing="false" text="Team B" />
+        </items>
+      </MenuButton>
+   </children>
+   <effect>
+      <InnerShadow blurType="ONE_PASS_BOX" />
+   </effect>
 </AnchorPane>
