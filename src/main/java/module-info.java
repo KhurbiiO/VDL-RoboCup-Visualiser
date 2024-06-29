@@ -5,5 +5,6 @@ module visualizer.match_viewer {
     opens visualizer.match_viewer to javafx.fxml;
     exports visualizer.match_viewer;
     requires org.bytedeco.javacpp;
+    requires org.json;
 
 }
