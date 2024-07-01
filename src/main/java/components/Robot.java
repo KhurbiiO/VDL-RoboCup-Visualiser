@@ -1,5 +1,7 @@
 package components;
 
+import components.controllers.CircleController;
+
 public class Robot extends CircleController{
     public Position currentPosition;
     public Position targetPosition;
@@ -31,17 +33,18 @@ public class Robot extends CircleController{
         return ballEngaged;
     }
 
-    public void setCurrentPosition(double newX, double newY, double newZ, double digitalHeight, double digitalWidth) {
-        currentPosition.setX(newX);
-        currentPosition.setY(newY);
-        currentPosition.setZ(newZ);
+    // public void setCurrentPosition(double newX, double newY, double newZ){
+    //     currentPosition.setX(newX);
+    //     currentPosition.setY(newY);
+    //     currentPosition.setZ(newZ);
+    // }
 
-        updateScreenCoordinate(currentPosition.getGridHVector(newX, newY, digitalWidth, digitalHeight), 1);
+    public void setCurrentPosition(double newX, double newY, double newZ, double realHeight, double realWidth, double digitalHeight, double digitalWidth) {
+        currentPosition.setCoordinate(newX, newY, newZ);
+        updateVisuals(realHeight, realWidth, digitalHeight, digitalWidth);
     }
     public void setTargetPosition(double newX, double newY, double newZ) {
-        targetPosition.setX(newX);
-        targetPosition.setY(newY);
-        targetPosition.setZ(newZ);
+        targetPosition.setCoordinate(newX, newY, newZ);
     }
     public void setCurrentVelocity(double[] currentVelocity) {
         this.currentVelocity = currentVelocity;
@@ -54,5 +57,9 @@ public class Robot extends CircleController{
     }
     public void setBallEngaged(boolean ballEngaged) {
         this.ballEngaged = ballEngaged;
+    }
+
+    public void updateVisuals(double realHeight, double realWidth, double digitalHeight, double digitalWidth){
+        updateScreenCoordinate(currentPosition.getGridVVector(realWidth, realHeight, digitalWidth, digitalHeight), 1);
     }
 }

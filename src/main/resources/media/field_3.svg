@@ -1,0 +1,15 @@
+<svg viewBox="0 0 180 220" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="167.5" y="0.5" width="219" height="159" transform="rotate(90 167.5 0.5)" fill="#A8DC9F" stroke="black"/>
+<path d="M157.5 10.5V209.5H18.5V10.5L157.5 10.5Z" stroke="black"/>
+<rect x="125.061" y="184.162" width="25.3374" height="73.2683" transform="rotate(90 125.061 184.162)" stroke="black"/>
+<rect x="125.061" y="10.5" width="25.3374" height="73.2683" transform="rotate(90 125.061 10.5)" stroke="black"/>
+<rect x="108.842" y="10.5" width="8.87653" height="40.8293" transform="rotate(90 108.842 10.5)" stroke="black"/>
+<rect x="108.84" y="6.5" width="4" height="40.8293" transform="rotate(90 108.84 6.5)" fill="#F90DC5" stroke="black"/>
+<rect x="108.93" y="209.5" width="4" height="40.8293" transform="rotate(90 108.93 209.5)" fill="#AF0FFB" stroke="black"/>
+<rect x="108.842" y="200.623" width="8.87653" height="40.8293" transform="rotate(90 108.842 200.623)" stroke="black"/>
+<path d="M88.4272 131.311C75.7119 131.311 65.4516 121.56 65.4516 109.588C65.4516 97.617 75.7119 87.8662 88.4272 87.8662C101.143 87.8662 111.403 97.617 111.403 109.588C111.403 121.56 101.143 131.311 88.4272 131.311Z" stroke="black"/>
+<line x1="158" y1="110.089" x2="18" y2="110.089" stroke="black"/>
+<rect x="9.61719" y="0.499969" width="218.429" height="9.11685" transform="rotate(90 9.61719 0.499969)" fill="#A27D7D" stroke="black"/>
+<rect x="9.61719" y="0.499969" width="83.7796" height="9" transform="rotate(90 9.61719 0.499969)" fill="#71BBD2" stroke="black"/>
+<rect x="9.61719" y="135.72" width="83.7796" height="9" transform="rotate(90 9.61719 135.72)" fill="#59A9BB" stroke="black"/>
+</svg>

@@ -1,5 +1,7 @@
 package components;
 
+import components.controllers.CircleController;
+
 public class Ball extends CircleController{
     public Position currentPosition;
     private double velocity;
@@ -25,11 +27,13 @@ public class Ball extends CircleController{
     public void setConfidence(double confidence) {
         this.confidence = confidence;
     }
-    public void setCurrentPosition(double newX, double newY, double newZ, double digitalHeight, double digitalWidth) {
-        currentPosition.setX(newX);
-        currentPosition.setY(newY);
-        currentPosition.setZ(newZ);
 
-        updateScreenCoordinate(currentPosition.getGridHVector(newX, newY, digitalWidth, digitalHeight), 1);
+    public void setCurrentPosition(double newX, double newY, double newZ, double realHeight, double realWidth, double digitalHeight, double digitalWidth) {
+        currentPosition.setCoordinate(newX, newY, newZ);
+        updateVisuals(realHeight, realWidth, digitalHeight, digitalWidth);
+    }
+
+    public void updateVisuals(double realHeight, double realWidth, double digitalHeight, double digitalWidth){
+        updateScreenCoordinate(currentPosition.getGridVVector(realWidth, realHeight, digitalWidth, digitalHeight), 1);
     }
 }

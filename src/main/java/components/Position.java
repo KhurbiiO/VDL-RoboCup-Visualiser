@@ -35,15 +35,22 @@ public class Position {
         setAxis(2, value);
     }
 
+    public void setCoordinate(double newX, double newY, double newZ){
+        setX(newX);
+        setY(newY);
+        setZ(newZ);
+    }
+
     public double[] getCoordinate(){
         double coordinate_[] = {getX(), getY(), getZ()};
         return coordinate_;
     }
 
     public double[] getGridVVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
-        double coordinate_[] = {map(getX(), (realWidth/2), (-realWidth/2), digitalWidth, 0d), 
-                                map(getY(), (realHeight/2), (-realHeight/2), digitalHeight, 0d), 
+        double coordinate_[] = {map(getX(), (-realWidth/2), (realWidth/2), 0d, digitalWidth), 
+                                map(getY(), (-realHeight/2), (realHeight/2), digitalHeight, 0d), 
                                 getZ()};
+
         return coordinate_;
     }
 

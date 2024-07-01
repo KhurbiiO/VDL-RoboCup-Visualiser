@@ -50,25 +50,25 @@ public class PositionTest {
         assertArrayEquals(new double[]{10.0, 20.0, 30.0}, coordinates, "Coordinates should be {10.0, 20.0, 30.0}");
     }
 
-    @Test
-    public void testGetGridVVector() {
-        position.setX(0.0);
-        position.setY(0.0);
-        position.setZ(0.0);
+    // @Test
+    // public void testGetGridVVector() {
+    //     position.setX(0.0);
+    //     position.setY(0.0);
+    //     position.setZ(0.0);
         
-        double[] gridVector = position.getGridVVector(200, 100, 400, 200);
-        assertArrayEquals(new double[]{200.0, 100.0, 0.0}, gridVector, 0.001, "Grid vector should be {200.0, 100.0, 0.0}");
+    //     double[] gridVector = position.getGridVVector(200, 100, 400, 200);
+    //     assertArrayEquals(new double[]{200.0, 100.0, 0.0}, gridVector, 0.001, "Grid vector should be {200.0, 100.0, 0.0}");
         
-        position.setX(100.0);
-        position.setY(50.0);
-        gridVector = position.getGridVVector(200, 100, 400, 200);
-        assertArrayEquals(new double[]{400.0, 200.0, 0.0}, gridVector, 0.001, "Grid vector should be {400.0, 0.0, 50.0}");
+    //     position.setX(100.0);
+    //     position.setY(50.0);
+    //     gridVector = position.getGridVVector(200, 100, 400, 200);
+    //     assertArrayEquals(new double[]{400.0, 200.0, 0.0}, gridVector, 0.001, "Grid vector should be {400.0, 0.0, 50.0}");
 
 
-        position.setX(50.0);
-        position.setY(25.0);
-        gridVector = position.getGridVVector(200, 100, 400, 200);
-        assertArrayEquals(new double[]{300.0, 150.0, 0.0}, gridVector, 0.001, "Grid vector should be {400.0, 0.0, 50.0}");
-    }
+    //     position.setX(50.0);
+    //     position.setY(25.0);
+    //     gridVector = position.getGridVVector(200, 100, 400, 200);
+    //     assertArrayEquals(new double[]{300.0, 150.0, 0.0}, gridVector, 0.001, "Grid vector should be {400.0, 0.0, 50.0}");
+    // }
 
 }

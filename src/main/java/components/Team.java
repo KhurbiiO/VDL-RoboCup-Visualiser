@@ -1,5 +1,7 @@
 package components;
 
+import components.controllers.*;
+
 import java.util.Vector;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -31,8 +33,8 @@ public class Team{
         this.scoreDisplay = new LabelController();
         this.logoDisplay = new PaneController();
         this.flagDisplay = new PaneController();
-        this.teamIPAddress = teamIPAddress;
         this.connectionDisplay = new CircleController();
+        this.teamIPAddress = teamIPAddress;
     }
 
     public void bindProperties(Pane logoDisplay, Pane flagDisplay, Label scoreDisplay, Circle connectionDisplay){
