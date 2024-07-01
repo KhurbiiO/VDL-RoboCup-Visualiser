@@ -9,6 +9,7 @@ import javafx.scene.shape.Circle;
 
 public class Team{
     private String teamName;
+    private String smallName;
     private Vector<Robot> robots;    
     private int teamScore;
     private int teamSize;
@@ -16,23 +17,24 @@ public class Team{
     private boolean isTeamB;
     private String teamIPAddress;
     public LabelController scoreDisplay;
-    public PaneController flagDisplay;
-    public PaneController logoDisplay;
+    public Flag flagDisplay;
+    public Logo logoDisplay;
     public CircleController connectionDisplay;
 
-    public Team(String teamName, int teamSize, String teamColor, String teamIPAddress, Boolean isTeamB){
+    public Team(String teamName, String smallName, int teamSize, String teamColor, String teamIPAddress, Boolean isTeamB){
         robots = new Vector<Robot>();
         for (int i = 0; i < teamSize; i++){
             robots.add(new Robot());
         }
         this.teamName = teamName;
+        this.smallName = smallName;
         this.teamScore = 0;
         this.teamColor = teamColor;
         this.teamSize = teamSize;
         this.isTeamB = isTeamB;
         this.scoreDisplay = new LabelController();
-        this.logoDisplay = new PaneController();
-        this.flagDisplay = new PaneController();
+        this.logoDisplay = new Logo();
+        this.flagDisplay = new Flag();
         this.connectionDisplay = new CircleController();
         this.teamIPAddress = teamIPAddress;
     }
@@ -54,6 +56,9 @@ public class Team{
     public String getTeamName() {
         return teamName;
     }
+    public String getSmallName() {
+        return smallName;
+    }
     public int getTeamScore() {
         return teamScore;   
     }
@@ -70,6 +75,9 @@ public class Team{
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
+    public void setSmallName(String smallName) {
+        this.smallName = smallName;
+    }
     public void setTeamScore(int teamScore) {
         this.teamScore = teamScore;
     }
@@ -79,10 +87,10 @@ public class Team{
     public void setTeamIPAddress(String teamIPAddress) {
         this.teamIPAddress = teamIPAddress;
     }
-    public void setTeamColor(String teamColor) {
+    public void setTeamColor(String teamColor, String stroke, int strokeWidth) {
         this.teamColor = teamColor;
         for (int i = 0; i < teamSize; i++){
-            robots.get(i).setScreenColor(teamColor, "#ffffff", 2);
+            robots.get(i).setScreenColor(teamColor, stroke, strokeWidth);
         }
         flagDisplay.setScreenColor(teamColor);
     }

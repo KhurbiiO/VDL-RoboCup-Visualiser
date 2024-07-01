@@ -1,6 +1,5 @@
 package components;
 
-import javafx.scene.image.Image;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +11,7 @@ public class TeamTest {
 
     @BeforeEach
     public void setUp() {
-        team = new Team("Test Team", 3, "#ed4848", "", true);
+        team = new Team("Test Team", "TT", 3, "#ed4848", "", true);
     }
 
     @Test

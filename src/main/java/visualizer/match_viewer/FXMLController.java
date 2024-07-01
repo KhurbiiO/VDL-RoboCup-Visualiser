@@ -1,9 +1,13 @@
 package visualizer.match_viewer;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.swing.JFileChooser;
+
 import components.Ball;
+import components.Config;
 import components.CoordsTransformation;
 import components.Robot;
 import components.StopWatch;
@@ -19,17 +23,13 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.util.Duration;
-import javafx.scene.image.ImageView;
 
 /**
  * FXMLController is responsible for controlling the match viewer UI.
@@ -82,8 +82,6 @@ public class FXMLController implements Initializable {
     @FXML
     VBox matchStats;
 
-    private int TEAM_SIZE = 6;
-
     Team teamA;
     Team teamB;
     Ball ball;
@@ -101,12 +99,11 @@ public class FXMLController implements Initializable {
     CircleController connACircleController;
     CircleController connBCircleController;
 
+    Config config;
+    Field fieldController;
 
     double realWidth;
     double realHeight;
-
-    Field fieldController;
-
     double rotation = 0;
     boolean isLaid = false;
 
@@ -116,6 +113,62 @@ public class FXMLController implements Initializable {
         field.setRotate(rotation);
         isLaid = !isLaid;
         resizeComponents();
+    }
+
+    @FXML
+    void loadConfig(){
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            config.readConfig(selectedFile.getAbsolutePath());
+
+            // Update field information
+            fieldController.setA(config.getFieldA());
+            fieldController.setB(config.getFieldB());
+            fieldController.setC(config.getFieldC());
+            fieldController.setD(config.getFieldD());
+            fieldController.setE(config.getFieldE());
+            fieldController.setF(config.getFieldF());
+            fieldController.setG(config.getFieldG());
+            fieldController.setH(config.getFieldH());
+            fieldController.setI(config.getFieldI());
+            fieldController.setJ(config.getFieldJ());
+            fieldController.setK(config.getFieldK());
+            fieldController.setL(config.getFieldL());
+            fieldController.setM(config.getFieldM());
+            fieldController.setN(config.getFieldN());
+            fieldController.setO(config.getFieldO());
+            fieldController.setP(config.getFieldP());
+            fieldController.setQ(config.getFieldQ());
+
+            //Update team A info
+            teamA.setTeamColor(config.getTeamAFlagcolor(), config.getPlayerStroke(), config.getPlayerStrokeWidth());
+            teamA.setSmallName(config.getTeamASmallname());
+            teamA.setTeamName(config.getTeamAFullname());
+            teamA.setTeamSize(config.getTeamASize());
+            teamA.logoDisplay.setImage(config.getTeamALogoPath());
+
+            //Update team A info
+            teamB.setTeamColor(config.getTeamBFlagcolor(), config.getPlayerStroke(), config.getPlayerStrokeWidth());
+            teamB.setSmallName(config.getTeamBSmallname());
+            teamB.setTeamName(config.getTeamBFullname());
+            teamB.setTeamSize(config.getTeamBSize());
+            teamB.logoDisplay.setImage(config.getTeamBLogoPath());
+
+            ball.setScreenColor(config.getBallColor(), config.getBallStroke(), config.getBallStrokeWidth());
+
+            // Update field Measurements
+            realWidth = fieldController.getB() + 2*fieldController.getL() + 2*fieldController.getM();
+            realHeight = fieldController.getA() + 2*fieldController.getL();
+
+            // Start listening in a separate thread
+            refClient = new RefClient(config.getRefboxPort(), config.getRefboxIP(), refBoardController, teamA, teamB, stopWatch);
+            refClient.listen(true);
+
+            fieldController.drawField(config.getTeamAFlagcolor(), config.getTeamBFlagcolor(), config.getFieldColor());
+            resizeComponents();
+        }
     }
 
     private void resizeComponents() {
@@ -148,7 +201,7 @@ public class FXMLController implements Initializable {
         double fieldWidth; 
         double fieldHeight;
 
-        if (isLaid){
+        if (isLaid && rotation == 90){
 
             fieldWidth = (height - 40);
             fieldHeight = (width - matchStats.getPrefWidth() - 40);
@@ -160,6 +213,17 @@ public class FXMLController implements Initializable {
 
             AnchorPane.setTopAnchor(field, fieldWidth/2 - fieldHeight/2 + 20);
 
+        }
+        else if(isLaid && rotation == 270){
+            fieldWidth = (height - 40);
+            fieldHeight = (width - matchStats.getPrefWidth() - 40);
+            double measurements[] = fitRectangleWithin(fieldHeight, fieldWidth, (9d/11d));
+
+
+            fieldWidth = measurements[0];
+            fieldHeight = measurements[1];
+
+            AnchorPane.setTopAnchor(field, fieldWidth/2 - fieldHeight/2 + 20);
         }
         else{
 
@@ -179,13 +243,18 @@ public class FXMLController implements Initializable {
         field.setPrefWidth(fieldWidth);
 
         for(int i = 0; i < teamA.getTeamSize(); i++){
-            teamA.getPlayer(i).updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
+            Robot player = teamA.getPlayer(i);
+            player.setScreenRadius((config.getPlayerRadius()/realWidth * fieldWidth));
+            player.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
         }
 
         for(int i = 0; i < teamB.getTeamSize(); i++){
-            teamB.getPlayer(i).updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
+            Robot player = teamB.getPlayer(i);
+            player.setScreenRadius((config.getPlayerRadius()/realWidth * fieldWidth));
+            player.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
         }
 
+        ball.setScreenRadius((config.getBallRadius()/realWidth * fieldWidth));
         ball.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
 
     }
@@ -265,28 +334,23 @@ public class FXMLController implements Initializable {
             resizeComponents();
         });
 
+        config = new Config();
+
         transform = new CoordsTransformation();
 
         fieldController = new Field();
         fieldController.bindPane(field);
 
-        // Init field sizes
-        realWidth = fieldController.getB() + 2*fieldController.getL() + 2*fieldController.getM();
-        realHeight = fieldController.getA() + 2*fieldController.getL();
-
-        teamA = new Team("Wolves", TEAM_SIZE, "#2481d7", "", false);
+        teamA = new Team("TeamA", "A", 5, "#2481d7", "", false);
         initTeam(teamA, logoTeamA, flagTeamA, scoreTeamA, connectionTeamA);
 
-        teamB = new Team("Skull", TEAM_SIZE, "#ed4848", "", true);
+        teamB = new Team("TeamB", "B", 5, "#ed4848", "", true);
         initTeam(teamB, logoTeamB, flagTeamB, scoreTeamB, connectionTeamB);
-
-        fieldController.drawField("#2481d7", "#ed4848", "#A8DC7F");
 
         ball = new Ball();
         initBall(ball, field);
-        // ball.setCurrentPosition(0, 0, 0, fieldHeight, fieldWidth, root.getPrefHeight(), root.getPrefWidth());
 
-        WSClient = new WSClient(28094, "localhost", teamA, teamB, ball, fieldController, transform);
+        // WSClient = new WSClient(28094, "localhost", teamA, teamB, ball, fieldController, transform);
 
         stopWatch = new StopWatch(50);
         stopWatch.bindLabel(timer);
@@ -304,13 +368,6 @@ public class FXMLController implements Initializable {
         refBoardController.bindLabel(refBoard);
 
         resizeComponents();
-
-        // Start listening in a separate thread
-        refClient = new RefClient(28097, "localhost", refBoardController, teamA, teamB, stopWatch);
-        refClient.enableLogging(true);
-
-        WSClient.listen(true);
-        refClient.listen(true);
 
         Timeline updateUI = new Timeline(
                 new KeyFrame(Duration.millis(50d), event -> {

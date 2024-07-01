@@ -33,12 +33,6 @@ public class Robot extends CircleController{
         return ballEngaged;
     }
 
-    // public void setCurrentPosition(double newX, double newY, double newZ){
-    //     currentPosition.setX(newX);
-    //     currentPosition.setY(newY);
-    //     currentPosition.setZ(newZ);
-    // }
-
     public void setCurrentPosition(double newX, double newY, double newZ, double realHeight, double realWidth, double digitalHeight, double digitalWidth) {
         currentPosition.setCoordinate(newX, newY, newZ);
         updateVisuals(realHeight, realWidth, digitalHeight, digitalWidth);

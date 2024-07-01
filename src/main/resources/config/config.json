@@ -1,24 +1,25 @@
 {
-	"type": "MSLRBCONF",
-	"description": "MSL RefBox configuration file",
+	"type": "MSLVCONF",
+	"description": "MSL visualiser configuration file",
 	"networking":
 	{
 		"refboxIP": "127.0.0.1",
         "refboxPort": 12345,
-        "basestationIP" : "127.0.0.1",
-		"basestationPort": 28097,
 
         "teamA" : {
-            "ipaddress" : "127.0.0.1"
+            "ipaddress" : "127.0.0.1",
+            "port" : 1000
         },
         "teamB" : {
-            "ipaddress" : "127.0.0.1"
+            "ipaddress" : "127.0.0.1",
+            "port" : 2000
         }
 	},
 	"appearance":
 	{
 
         "field" : {
+            "color" : "#A8DC7F",
             "A" : 22,
             "B" : 14,
             "C" : 6.9,
@@ -39,14 +40,31 @@
         },
 
         "teamA" : {
-		    "name": "TeamA",
+            "logoPath" : "/media/team_one.png",
+		    "fullname" : "TeamA",
+            "smallname" : "TA",
             "size" : 5,
             "flagcolor" : "#007BA7"
         },
         "teamB" : {
-		    "name": "TeamA",
+            "logoPath" : "/media/team_two.png",
+		    "fullname": "TeamB",
+            "smallname" : "TB",
             "size" : 5,
             "flagcolor" : "#C240BC"
+        },
+
+        "player" : {
+            "radius" : 0.45,
+            "stroke" : "#000000",
+            "strokeWidth"  : 2
+        },
+
+        "ball" : {
+            "color" : "#a8ff05",
+            "radius" : 0.25,
+            "stroke" : "#000000",
+            "strokeWidth"  : 2
         }
 	}
 }

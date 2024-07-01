@@ -41,7 +41,7 @@
          </children>
       </VBox>
       <Button layoutX="957.0" layoutY="551.0" mnemonicParsing="false" onAction="#rotateField" stylesheets="@../styles/style.css" text="⟳" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-      <Button layoutX="823.0" layoutY="583.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" stylesheets="@../styles/style.css" text="CONFIG" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="60.0" />
+      <Button layoutX="823.0" layoutY="583.0" mnemonicParsing="false" onAction="#loadConfig" prefHeight="26.0" prefWidth="110.0" stylesheets="@../styles/style.css" text="CONFIG" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="60.0" />
    </children>
    <effect>
       <InnerShadow blurType="ONE_PASS_BOX" />
