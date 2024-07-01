@@ -1,4 +1,4 @@
-package components;
+package components.communication;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;

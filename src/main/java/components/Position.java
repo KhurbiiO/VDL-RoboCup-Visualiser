@@ -4,23 +4,13 @@ import java.util.Vector;
 
 public class Position {
     private Vector<Double> coordinate;
-    private Double digitalWidth;
-    private Double digitalHeight;
-    private Double realWidth;
-    private Double realHeight;
 
-    public Position(Double digital_grid_width, Double digital_grid_height, Double real_grid_width, Double real_grid_height){
+    public Position(){
         coordinate = new Vector<Double>(3);
         for (int i = 0; i < 3; i++)
             coordinate.add(0d);
-
-        digitalWidth = digital_grid_width;
-        digitalHeight = digital_grid_height;
-        realWidth = real_grid_width;
-        realHeight = real_grid_height;
     }
 
-    // Getters
     public Double getX(){
         return getAxis(0);
     }
@@ -33,7 +23,6 @@ public class Position {
         return getAxis(2);
     }
 
-    // Setters
     public void setX(Double value){
         setAxis(0, value);
     }
@@ -46,37 +35,41 @@ public class Position {
         setAxis(2, value);
     }
 
-    public Vector<Double> getCoordinate(){
-        return coordinate;
+    public void setCoordinate(double newX, double newY, double newZ){
+        setX(newX);
+        setY(newY);
+        setZ(newZ);
     }
 
-    public Vector<Double> getGridHVector(){
-        Vector<Double> coordinate_ = new Vector<Double>(3);
-        coordinate_.add(map(getX(), (realWidth/2), (-realWidth/2), 0d, digitalHeight));
-        coordinate_.add(map(getX(), (realHeight/2), (-realHeight/2), 0d, digitalWidth));
-        coordinate_.add(getZ());
+    public double[] getCoordinate(){
+        double coordinate_[] = {getX(), getY(), getZ()};
+        return coordinate_;
+    }
+
+    public double[] getGridVVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
+        double coordinate_[] = {map(getX(), (-realWidth/2), (realWidth/2), 0d, digitalWidth), 
+                                map(getY(), (-realHeight/2), (realHeight/2), digitalHeight, 0d), 
+                                getZ()};
 
         return coordinate_;
     }
 
-    public Vector<Double> getGridVVector(){
-        Vector<Double> coordinate_ = new Vector<Double>(3);
-        coordinate_.add(map(getX(), (realWidth/2), (-realWidth/2), 0d, digitalWidth));
-        coordinate_.add(map(getX(), (realHeight/2), (-realHeight/2), 0d, digitalHeight));
-        coordinate_.add(getZ());
-
+    public double[] getGridHVector(double realWidth, double realHeight, double digitalWidth, double digitalHeight){
+        double coordinate_[] = {map(getY(), (realWidth/2), (-realWidth/2), digitalWidth, 0d), 
+                                map(getX(), (realHeight/2), (-realHeight/2), digitalHeight, 0d), 
+                                getZ()};
         return coordinate_;
     }
 
     private Double getAxis(int index){
         return coordinate.get(index);
     }
-
-    private void setAxis(int index, Double new_value){
-        coordinate.set(index, new_value);
+    
+    private void setAxis(int index, Double newValue){
+        coordinate.set(index, newValue);
     }
 
-    private Double map(Double x, Double in_min, Double in_max, Double out_min, Double out_max){
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    private double map(double x, double inMin, double inMax, double outMin, double outMax){
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 }
