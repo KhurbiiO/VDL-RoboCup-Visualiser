@@ -1,0 +1,70 @@
+{
+	"type": "MSLVCONF",
+	"description": "MSL visualiser configuration file",
+	"networking":
+	{
+		"refboxIP": "127.0.0.1",
+        "refboxPort": 12345,
+
+        "teamA" : {
+            "ipaddress" : "127.0.0.1",
+            "port" : 1000
+        },
+        "teamB" : {
+            "ipaddress" : "127.0.0.1",
+            "port" : 2000
+        }
+	},
+	"appearance":
+	{
+
+        "field" : {
+            "color" : "#A8DC7F",
+            "A" : 22,
+            "B" : 14,
+            "C" : 6.9,
+            "D" : 3.9,
+            "E" : 2.25,
+            "F" : 0.75,
+            "G" : 0.75,
+            "H" : 4,
+            "I" : 3.6,
+            "J" : 0.15,
+            "K" : 0.125,
+            "L" : 1,
+            "M" : 1,
+            "N" : 7.5,
+            "O" : 1,
+            "P" : 0.5,
+            "Q" : 3.5
+        },
+
+        "teamA" : {
+            "logoPath" : "/media/team_one.png",
+		    "fullname" : "TeamA",
+            "smallname" : "TA",
+            "size" : 5,
+            "flagcolor" : "#007BA7"
+        },
+        "teamB" : {
+            "logoPath" : "/media/team_two.png",
+		    "fullname": "TeamB",
+            "smallname" : "TB",
+            "size" : 5,
+            "flagcolor" : "#C240BC"
+        },
+
+        "player" : {
+            "radius" : 0.45,
+            "stroke" : "#000000",
+            "strokeWidth"  : 2
+        },
+
+        "ball" : {
+            "color" : "#a8ff05",
+            "radius" : 0.25,
+            "stroke" : "#000000",
+            "strokeWidth"  : 2
+        }
+	}
+}
