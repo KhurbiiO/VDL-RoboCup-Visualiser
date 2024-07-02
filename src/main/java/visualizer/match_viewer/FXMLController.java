@@ -206,7 +206,6 @@ public class FXMLController implements Initializable {
                 }
             }
 
-
             // Start listening in a separate thread
             if (refClient == null){
                 refClient = new RefClient(config.getRefboxPort(), config.getRefboxIP(), refBoardController, teamA, teamB, stopWatch);
