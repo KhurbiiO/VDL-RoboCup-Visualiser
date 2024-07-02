@@ -1,14 +1,10 @@
 # VDL-RoboCup-Visualizer 🤖
 The match visualization tool for VDL robocup football match held.
 
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your system:
-- Java Development Kit (JDK), version 11 or newer.
-
 ## Installing Maven
 
-Maven is a build automation tool used primarily for Java projects. The installation instructions vary depending on your operating system:
+Maven is a build automation tool used primarily for Java projects. This application was created using this tool thus it needs to be installed for the compilation process.
+The installation instructions vary depending on your operating system:
 
 ### Windows
 
@@ -26,10 +22,26 @@ sudo apt update
 sudo apt install maven
 ```
 
-## Building and Running the Project
+## Building the application
 To build the project, navigate to the directory containing your project's pom.xml file and execute:
 ```bash
-mvn clean install package
+mvn clean install
 ```
+This will generate a `target` folder with the compiled application.
+
+## Running the application
+To run the application you must first navigate to the `target` folder and based on you operating system you proceed:
+
+### Windows
+- Double-click on the `runme.bat` file.
+
+### Linux
+Run the following in your command line:
+```bash
+chmod +x runme.sh
+bash runme.sh
+
+```
+
 
 
