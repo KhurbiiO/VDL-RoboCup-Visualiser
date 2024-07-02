@@ -3,8 +3,8 @@
 	"description": "MSL visualiser configuration file",
 	"networking":
 	{
-		"refboxIP": "127.0.0.1",
-        "refboxPort": 12345,
+		"refboxIP": "145.93.181.17",
+        "refboxPort": 28097,
 
         "teamA" : {
             "ipaddress" : "239.255.0.1",
