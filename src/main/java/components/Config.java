@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
 
 public class Config {
+    private boolean loaded;
+
     private String refboxIP;
     private int refboxPort;
     private String teamAIP;
@@ -55,7 +58,9 @@ public class Config {
     private String ballStroke;
     private int ballStrokeWidth;
 
-    public Config(){}
+    public Config(){
+        loaded = false;
+    }
 
     public void readConfig(String filepath) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -124,9 +129,12 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        loaded = true;
     }
 
    // Getter methods for all variables
+   public boolean getLoaded(){ return loaded; }
+
    public String getRefboxIP() { return refboxIP; }
    public int getRefboxPort() { return refboxPort; }
    public String getTeamAIP() { return teamAIP; }

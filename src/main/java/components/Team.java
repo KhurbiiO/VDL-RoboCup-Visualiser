@@ -19,7 +19,8 @@ public class Team{
     public LabelController scoreDisplay;
     public Flag flagDisplay;
     public Logo logoDisplay;
-    public CircleController connectionDisplay;
+    public ConIndactor connectionDisplay;
+    
 
     public Team(String teamName, String smallName, int teamSize, String teamColor, String teamIPAddress, Boolean isTeamB){
         robots = new Vector<Robot>();
@@ -35,7 +36,7 @@ public class Team{
         this.scoreDisplay = new LabelController();
         this.logoDisplay = new Logo();
         this.flagDisplay = new Flag();
-        this.connectionDisplay = new CircleController();
+        this.connectionDisplay = new ConIndactor();
         this.teamIPAddress = teamIPAddress;
     }
 

@@ -47,7 +47,7 @@ public class DataStream extends Thread {
             try {
                 JSONObject data = observer.GetData();
                 SendData(data);
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }
             catch (InterruptedException e) {
 

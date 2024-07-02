@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Udp {
+public class UDPClientV2 {
 
     public class UdpStream extends Thread implements AutoCloseable {
         ////////////// property ////////////////////
@@ -91,8 +91,6 @@ public class Udp {
 
         @Override
         public void run() {
-            System.out.println("HELLO FROM UDP VISUALISER!");
-
             while (true) {
                 try {
                     String data = RecieveData(); // block thread
@@ -108,14 +106,14 @@ public class Udp {
             }
         }
 
-    }
-
-    private static boolean IsValidJson(String data) {
-        try {
-            new JSONObject(data);
-            return true;
-        } catch (JSONException e) {
-            return false;
+        private boolean IsValidJson(String data) {
+            try {
+                new JSONObject(data);
+                return true;
+            } catch (JSONException e) {
+                return false;
+            }
         }
+
     }
 }

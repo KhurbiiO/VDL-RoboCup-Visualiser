@@ -1,59 +1,78 @@
 package components;
+import javafx.scene.image.Image;
 
-import components.controllers.CircleController;
+import components.Coordinate;
 
-public class Robot extends CircleController{
+
+public class Robot {
     public Position currentPosition;
     public Position targetPosition;
-    private double[] currentVelocity;
-    private double batterPercentage;
+    private float currentVelocity;
+    private float batterPercentage;
     private boolean ballEngaged;
     private String intention;
+    private Image icon;
 
-    public Robot(){
-        super();     
-        currentPosition = new Position();
-        targetPosition = new Position();
-        currentVelocity = new double[3];
-        batterPercentage = 100f;
-        ballEngaged = false;
-        intention = "NULL";
+    public int getId(){
+        return matchId;
     }
 
-    public double[] getCurrentVelocity() {
+    public Robot(int match_id){
+        matchId = match_id;
+        coordinate = new Coordinate(null, null, null, null);
+        try {
+            icon = new Image(getClass().getResource(imgPath).toExternalForm());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public float getCurrentVelocity() {
         return currentVelocity;
     }
-    public double getBatterPercentage() {
+
+    public float getBatterPercentage() {
         return batterPercentage;
     }
+
     public String getIntention() {
         return intention;
     }
+
     public boolean getBallEngaged(){
         return ballEngaged;
     }
 
-    public void setCurrentPosition(double newX, double newY, double newZ, double realHeight, double realWidth, double digitalHeight, double digitalWidth) {
-        currentPosition.setCoordinate(newX, newY, newZ);
-        updateVisuals(realHeight, realWidth, digitalHeight, digitalWidth);
+    public Image getIcon(){
+        return icon;
     }
+
+
+    public void setCurrentPosition(double newX, double newY, double newZ) {
+        currentPosition.setX(newX);
+        currentPosition.setY(newY);
+        currentPosition.setZ(newZ);
+    }
+
     public void setTargetPosition(double newX, double newY, double newZ) {
-        targetPosition.setCoordinate(newX, newY, newZ);
+        targetPosition.setX(newX);
+        targetPosition.setY(newY);
+        targetPosition.setZ(newZ);
     }
-    public void setCurrentVelocity(double[] currentVelocity) {
+
+    public void setCurrentVelocity(float currentVelocity) {
         this.currentVelocity = currentVelocity;
     }
-    public void setBatterPercentage(double batterPercentage) {
+
+    public void setBatterPercentage(float batterPercentage) {
         this.batterPercentage = batterPercentage;
     }
+
     public void setIntention(String intention) {
         this.intention = intention;
     }
+
     public void setBallEngaged(boolean ballEngaged) {
         this.ballEngaged = ballEngaged;
-    }
-
-    public void updateVisuals(double realHeight, double realWidth, double digitalHeight, double digitalWidth){
-        updateScreenCoordinate(currentPosition.getGridVVector(realWidth, realHeight, digitalWidth, digitalHeight), 1);
     }
 }

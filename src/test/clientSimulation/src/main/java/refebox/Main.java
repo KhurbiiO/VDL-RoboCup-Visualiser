@@ -13,7 +13,7 @@ public class Main {
 
         int port = 80;
 
-        DataStream dataStream1 = new DataStream("src/main/resources/20180618_085311.A.msl",multiAddr1, 80);
+        DataStream dataStream1 = new DataStream("src/main/resources/20180618_085311.A.msl",multiAddr1, 1025);
         DataStream dataStream2 = new DataStream("src/main/resources/20180618_085311.B.msl",multiAddr2, 80);
 
         dataStream1.start();

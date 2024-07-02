@@ -83,6 +83,14 @@ public class Field extends PaneController{
 
         viewEngine.loadContent(htmlContent);
     }
+
+
+
+    public void removePlayers(int n){
+        for (int i = 1; i < n+1; i++){
+            getNode().getChildren().remove(1);
+        }
+    }
     
     public double getA() {
         return A;

@@ -15,19 +15,23 @@ import components.Field;
 import javafx.application.Platform;
 
 public class WSClient extends UDPClient {
-    private Team teamA;
-    private Team teamB;
+    private Team team;
     private Ball ball;
     private Field field;
     private CoordsTransformation transform;
 
-    public WSClient(int port, String ipaddress, Team teamA, Team teamB, Ball ball, Field field, CoordsTransformation transform){
+    private double fieldWidth;
+    private double fieldHeight;
+
+    public WSClient(int port, String ipaddress, Team team, Ball ball, Field field, CoordsTransformation transform){
         super(port, ipaddress);
-        this.teamA = teamA;
-        this.teamB = teamB;
+        this.team = team;
         this.ball = ball;
         this.field = field;
         this.transform = transform;
+
+        fieldWidth = field.getA() + field.getL()*2 + field.getM();
+        fieldHeight = field.getB() + field.getL()*2;
     }
 
     @Override
@@ -46,20 +50,9 @@ public class WSClient extends UDPClient {
     }
 
     private void updateField(String data){
-
-        double fieldWidth = field.getA() + field.getL()*2 + field.getM();
-        double fieldHeight = field.getB() + field.getL()*2;
-
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(data);
-            Team team = null;
-            try{
-                String teamName = jsonNode.get("teamName").asText();
-                if(teamName == teamA.getTeamName()) team=teamA;
-                else if(teamName == teamB.getTeamName()) team=teamB;
-                else return;                
-            }catch(NoSuchElementException e){}
 
             Iterator<JsonNode> robots = jsonNode.get("worldstate").get("robots").elements();
 
@@ -90,7 +83,7 @@ public class WSClient extends UDPClient {
                         transformedTargetPose = targetPose;
                     }
                     
-                    Platform.runLater(() -> player.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefWidth(), field.getNode().getPrefHeight()));
+                    Platform.runLater(() -> player.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
                     player.setTargetPosition(transformedTargetPose[0], transformedTargetPose[1], transformedTargetPose[2]);
                 }
                 catch(NoSuchElementException e){
@@ -117,7 +110,7 @@ public class WSClient extends UDPClient {
                     else{
                         transformedCurrentPose = currentPose;
                     }
-                    Platform.runLater(() -> ball.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefWidth(), field.getNode().getPrefHeight()));
+                    Platform.runLater(() -> ball.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
                 }catch(NoSuchElementException e){}
             }catch(NoSuchElementException e){}
         }catch(JsonProcessingException e){}
