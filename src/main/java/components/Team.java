@@ -81,6 +81,7 @@ public class Team{
     }
     public void setTeamScore(int teamScore) {
         this.teamScore = teamScore;
+        scoreDisplay.setScreenText(Integer.toString(teamScore));
     }
     public void setTeamSize(int teamSize) {
         this.teamSize = teamSize;

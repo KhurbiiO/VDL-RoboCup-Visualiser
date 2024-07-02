@@ -16,6 +16,7 @@ public class RefClient extends TCPClient{
     private final String COMM_STOP = "STOP";
     private final String COMM_RESET = "RESET";
     private final String COMM_SUBSTITUTION = "SUBSTITUTION";
+    private final String COMM_GOAL = "GOAL";
 
     private LabelController refBoardController;
     private Team teamA;
@@ -52,6 +53,26 @@ public class RefClient extends TCPClient{
                         Platform.runLater(() -> stopWatch.startSW());
                         break;
 
+                    case COMM_GOAL:
+                        System.out.println("Handling COMM_GOAL event");
+                        try{
+                            String target = jsonNode.get("targetTeam").asText();
+                            if (target.startsWith(teamA.getTeamIPAddress())){
+                                teamA.setTeamScore(0);
+                                Platform.runLater(() -> {
+                                    refBoardController.setScreenText(String.format("%s Scored!" ,teamA.getTeamName()));
+                                    teamA.setTeamScore(teamA.getTeamScore()+1);
+                                });
+                            }
+                            else if (target.startsWith(teamB.getTeamIPAddress())){
+                                Platform.runLater(() -> {
+                                    refBoardController.setScreenText(String.format("%s Scored!" ,teamB.getTeamName()));
+                                    teamB.setTeamScore(teamB.getTeamScore()+1);
+                                });
+                            }
+                        }catch(NoSuchElementException e){}
+                        break;
+
                     case COMM_STOP:
                         System.out.println("Handling COMM_STOP event");
                         Platform.runLater(() -> stopWatch.stopSW());
@@ -59,7 +80,11 @@ public class RefClient extends TCPClient{
 
                     case COMM_RESET:
                         System.out.println("Handling COMM_RESET event");
-                        Platform.runLater(() -> stopWatch.resetStopWatch());
+                        Platform.runLater(() -> {
+                            stopWatch.resetStopWatch();
+                            teamA.setTeamScore(0);
+                            teamB.setTeamScore(0);
+                        });
                         break;
 
                     case COMM_SUBSTITUTION:
