@@ -8,7 +8,7 @@ import java.util.Enumeration;
 public class Main {
     public static void main(String[] args)  {
        try{
-        InetAddress multiAddr1 = InetAddress.getByName("239.255.0.1");
+        InetAddress multiAddr1 = InetAddress.getByName("224.16.32.0");
         InetAddress multiAddr2 = InetAddress.getByName("239.255.0.2");
 
         int port = 80;

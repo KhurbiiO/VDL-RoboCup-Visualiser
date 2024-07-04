@@ -3,8 +3,10 @@
 	"description": "MSL visualiser configuration file",
 	"networking":
 	{
-		"refboxIP": "145.93.181.17",
+		"refboxIP": "127.0.0.1",
         "refboxPort": 28097,
+        "broadcastIP" : "127.0.0.1",
+        "broadcastPort" : 12345,
 
         "teamA" : {
             "ipaddress" : "224.16.32.0",
@@ -20,6 +22,8 @@
 
         "field" : {
             "color" : "#A8DC7F",
+            "goalWidth" : 2.45,
+            "goalDepth" : 0.4,
             "A" : 22,
             "B" : 14,
             "C" : 6.9,
@@ -41,7 +45,7 @@
 
         "teamA" : {
             "logoPath" : "/media/team_one.png",
-		    "fullname" : "TeamA",
+		    "fullname" : "Tigers",
             "smallname" : "TA",
             "size" : 5,
             "flagcolor" : "#007BA7"

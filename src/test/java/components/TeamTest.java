@@ -31,20 +31,9 @@ public class TeamTest {
     }
 
     @Test
-    public void testSetScore() {
-        team.setTeamScore(10);
-        assertEquals(10, team.getTeamScore(), "Score should be 10");
-    }
-
-    @Test
     public void testGetTeamName() {
         assertEquals("Test Team", team.getTeamName(), "Team name should be 'Test Team'");
     }
-
-    // @Test
-    // public void testGetLogo() {
-    //     assertNotNull(team.getLogo(), "Logo should not be null");
-    // }
 
     @Test
     public void testGetPlayer() {

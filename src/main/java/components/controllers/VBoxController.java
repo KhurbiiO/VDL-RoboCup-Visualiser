@@ -1,21 +1,37 @@
 package components.controllers;
 
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * The VBoxController class is responsible for managing the properties and bindings
+ * of a VBox node in a JavaFX application.
+ */
 public class VBoxController {
-    private VBox node;
-    private ChangeListener<Number> heightListener;
-    private ChangeListener<Number> widthListener;
+    private VBox node; // The VBox node that this controller manages
+    private ChangeListener<Number> heightListener; // Listener for height changes
+    private ChangeListener<Number> widthListener;  // Listener for width changes
 
-    public VBoxController(){}
+    /**
+     * Default constructor for VBoxController.
+     */
+    public VBoxController() {}
 
-    public void bindVBox(VBox node){
+    /**
+     * Binds a VBox node to this controller.
+     * 
+     * @param node the VBox node to be managed
+     */
+    public void bindVBox(VBox node) {
         this.node = node;
     }
 
+    /**
+     * Centers the bound VBox node vertically within its parent AnchorPane, with an optional offset.
+     * 
+     * @param offset the offset to apply to the top anchor
+     */
     public void centerVScreenAnchor(double offset) {
         try {
             AnchorPane parent = (AnchorPane) node.getParent();
@@ -33,6 +49,11 @@ public class VBoxController {
         }
     }
 
+    /**
+     * Centers the bound VBox node horizontally within its parent AnchorPane, with an optional offset.
+     * 
+     * @param offset the offset to apply to the left anchor
+     */
     public void centerHScreenAnchor(double offset) {
         try {
             AnchorPane parent = (AnchorPane) node.getParent();
@@ -50,6 +71,11 @@ public class VBoxController {
         }
     }
 
+    /**
+     * Removes the vertical listeners from the parent AnchorPane.
+     * 
+     * @param parent the parent AnchorPane
+     */
     private void removeVListeners(AnchorPane parent) {
         if (heightListener != null) {
             parent.heightProperty().removeListener(heightListener);
@@ -57,6 +83,11 @@ public class VBoxController {
         }
     }
 
+    /**
+     * Removes the horizontal listeners from the parent AnchorPane.
+     * 
+     * @param parent the parent AnchorPane
+     */
     private void removeHListeners(AnchorPane parent) {
         if (widthListener != null) {
             parent.widthProperty().removeListener(widthListener);
@@ -64,7 +95,12 @@ public class VBoxController {
         }
     }
 
-    public VBox getNode(){
+    /**
+     * Gets the bound VBox node.
+     * 
+     * @return the VBox node managed by this controller
+     */
+    public VBox getNode() {
         return node;
     }
 }

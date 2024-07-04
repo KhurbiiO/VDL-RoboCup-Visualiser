@@ -306,9 +306,11 @@ public abstract class UDPClient implements Runnable {
                 onReceive(data, packet.getAddress().getHostAddress(), packet.getPort());
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             listen = false;
             thread = null;
         } catch (IOException e) {
+            e.printStackTrace();
             listen = false;
             thread = null;
 

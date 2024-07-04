@@ -5,30 +5,42 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-public class Field extends PaneController{
+/**
+ * The Field class extends PaneController to manage the visual representation
+ * of a field in a JavaFX application. It includes methods to draw the field,
+ * manage players, and bind a WebView to the Pane.
+ */
+public class Field extends PaneController {
 
-    private double A;  
-    private double B;  
-    private double C; 
-    private double D; 
-    private double E;  
-    private double F; 
-    private double G;  
-    private double H;  
-    private double I;  
-    private double J;  
-    private double K;  
-    private double L;  
-    private double M;  
-    private double N;  
-    private double O;  
-    private double P;  
-    private double Q; 
+    // Field dimensions and properties
+    private double A;
+    private double B;
+    private double C;
+    private double D;
+    private double E;
+    private double F;
+    private double G;
+    private double H;
+    private double I;
+    private double J;
+    private double K;
+    private double L;
+    private double M;
+    private double N;
+    private double O;
+    private double P;
+    private double Q;
+    private double goaldepth;
+    private double goalwidth;
 
     private WebView view;
     private WebEngine viewEngine;
-    
-    public Field(){
+
+    /**
+     * Default constructor for Field.
+     * Initializes field dimensions and properties.
+     */
+    public Field() {
         super();
         A = 22;
         B = 14;
@@ -47,8 +59,16 @@ public class Field extends PaneController{
         O = 1;
         P = 0.5;
         Q = 3.5;
+        goalwidth = 2.42;
+        goaldepth = 0.4;
+
     }
 
+    /**
+     * Binds a Pane node to this controller and initializes the WebView.
+     * 
+     * @param node the Pane node to be managed
+     */
     @Override
     public void bindPane(Pane node) {
         super.bindPane(node);
@@ -56,13 +76,52 @@ public class Field extends PaneController{
         view = new WebView();
         viewEngine = view.getEngine();
 
-        view.prefWidthProperty().bind(this.getNode().widthProperty()); // Stretch image to fit the Pane's width
-        view.prefHeightProperty().bind(this.getNode().heightProperty()); // Stretch image to fit the Pane's height
+        // Stretch image to fit the Pane's width and height
+        view.prefWidthProperty().bind(this.getNode().widthProperty());
+        view.prefHeightProperty().bind(this.getNode().heightProperty());
 
         this.getNode().getChildren().add(view);
     }
 
-    public void drawField(String flagAColor, String flagBColor, String fieldColor){
+    /**
+     * Draws the field with specified colors for team flags and field background.
+     * 
+     * @param flagAColor the color of team A's flag
+     * @param flagBColor the color of team B's flag
+     * @param fieldColor the background color of the field
+     */
+    public void drawField(String flagAColor, String flagBColor, String fieldColor) {
+
+        // Scale factor to fit field into SVG
+        double scale = 10.0;
+        
+        // Calculate dimensions for SVG
+        double fieldHeight = A * scale;
+        double fieldWidth = B * scale;
+        double penaltyAreaWidth = C * scale;
+        double goalAreaWidth = D * scale;
+        double penaltyAreaDepth = E * scale;
+        double goalAreaDepth = F * scale;
+        double centerCircleDiameter = H * scale;
+        
+        double goalDepth = goaldepth * scale;
+        double goalWidth = goalwidth * scale;
+
+        // double penaltyMarkDistance = I * scale;
+        double markDiameter = J * scale;
+        double lineWidth = K * scale;
+        double outerShell = L * scale;
+        double technicalFieldWidth = M * scale;
+        double technicalFieldLength = N * scale;
+
+         // Total width and height for the SVG canvas
+        double svgWidth = fieldHeight + outerShell*2;
+        double svgHeight = fieldWidth + outerShell*2 + technicalFieldWidth*2;
+
+        // Calculate positions based on scaled dimensions
+        double centerX = svgWidth/2;
+        double centerY = svgHeight/2;
+
         String htmlContent = "<html><body style='margin:0;padding:0;overflow:hidden; background:#52494a'>" +
                             "<div style='width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;'>" +
                             "<svg viewBox=\"0 0 180 220\" width=\"100%\" height=\"100%\" fill=\"none\">" +
@@ -81,150 +140,105 @@ public class Field extends PaneController{
                             "<rect x=\"9.61719\" y=\"135.72\" width=\"83.7796\" height=\"9\" transform=\"rotate(90 9.61719 135.72)\" fill=\"#59A9BB\" stroke=\"black\"/>" +
                             "</svg></div></body></html>";
 
+        //TODO: Continue the complete SVG field generator.
+        // String htmlContent = "<html><body style='margin:0;padding:0;overflow:hidden; background:#52494a'>" +
+        // "<div style='width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;'>" +
+        // "<svg viewBox=\"0 0 " + svgWidth + " " + svgHeight + "\" style=\"width:100%; height:100%;\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+        // "<g transform=\"rotate(-90 " + centerX + " " + centerY + ")\">" +
+        // // Outer field
+        // "<rect x=\"0\" y=\"0\" width=\"" + (fieldHeight + outerShell*2) + "\" height=\"" + (fieldWidth + outerShell*2 + technicalFieldWidth*2) + "\" fill=\"" + fieldColor + "\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" +
+        // "<rect x=\"0\" y=\"0\" width=\"" + svgWidth + "\" height=\"" + technicalFieldWidth + "\" fill=\"#000000\" />" + // Top ghost field
+        // "<rect x=\"" + outerShell + "\" y=\"" + (outerShell + technicalFieldWidth) + "\" width=\"" + fieldHeight + "\" height=\"" + fieldWidth + "\" fill=\"" + fieldColor + "\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" +
+        // // Penalty areas
+        // "<rect x=\"" + outerShell + "\" y=\"" + (centerY - penaltyAreaWidth/2) + "\" width=\"" + penaltyAreaDepth + "\" height=\"" + penaltyAreaWidth + "\" fill=\"none\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Left penalty area
+        // "<rect x=\"" + (outerShell + fieldHeight - penaltyAreaDepth) + "\" y=\"" + (centerY - penaltyAreaWidth/2) + "\" width=\"" + penaltyAreaDepth + "\" height=\"" + penaltyAreaWidth + "\" fill=\"none\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Right penalty area
+        // // Goal areas
+        // "<rect x=\"" + outerShell + "\" y=\"" + (centerY - goalAreaWidth/2 ) + "\" width=\"" + goalAreaDepth + "\" height=\"" + goalAreaWidth + "\" fill=\"none\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Left goal area
+        // "<rect x=\"" + (outerShell + fieldHeight - goalAreaDepth) + "\" y=\"" + (centerY - goalAreaWidth/2 ) + "\" width=\"" + goalAreaDepth + "\" height=\"" + goalAreaWidth + "\" fill=\"none\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Right goal area
+        // // Flags
+        // "<rect x=\"" + (outerShell - goalDepth) + "\" y=\"" + (centerY - goalWidth/2) + "\" width=\"" + goalDepth + "\" height=\"" + goalWidth + "\" fill=\"" + flagAColor + "\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Left flag
+        // "<rect x=\"" + (outerShell + fieldHeight) + "\" y=\"" + (centerY - goalWidth/2) + "\" width=\"" + goalDepth + "\" height=\"" + goalWidth + "\" fill=\"" + flagBColor + "\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Right flag
+        // // Center circle and mark
+        // "<circle cx=\"" + centerX + "\" cy=\"" + (centerY) + "\" r=\"" + (centerCircleDiameter / 2) + "\" fill=\"none\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Center circle
+        // "<circle cx=\"" + centerX + "\" cy=\"" + (centerY) + "\" r=\"" + (markDiameter / 2) + "\" fill=\"black\"/>" + // Center mark
+        // // Halfway line
+        // "<line x1=\"" + centerX + "\" y1=\"" + (outerShell) + "\" x2=\"" + centerX + "\" y2=\"" + (outerShell + fieldWidth + technicalFieldWidth) + "\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Halfway line
+        // // Technical fields
+        // "<rect x=\"0\" y=\"" + (outerShell * 2 + fieldWidth + technicalFieldWidth) + "\" width=\"" + technicalFieldLength + "\" height=\"" + technicalFieldWidth + "\" fill=\"#71BBD2\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Left technical field
+        // "<rect x=\"" + (svgWidth - technicalFieldLength) + "\" y=\"" + (outerShell * 2 + fieldWidth + technicalFieldWidth) + "\" width=\"" + technicalFieldLength + "\" height=\"" + technicalFieldWidth + "\" fill=\"#71BBD2\" stroke=\"black\" stroke-width=\"" + lineWidth + "\"/>" + // Right technical field
+        // "</g></svg></div></body></html>";
+
+
+
         viewEngine.loadContent(htmlContent);
     }
 
-
-
-    public void removePlayers(int n){
-        for (int i = 1; i < n+1; i++){
+    /**
+     * Removes a specified number of player nodes from the field.
+     * 
+     * @param n the number of players to remove
+     */
+    public void removePlayers(int n) {
+        for (int i = 1; i < n + 1; i++) {
             getNode().getChildren().remove(1);
         }
     }
-    
-    public double getA() {
-        return A;
-    }
 
-    public void setA(double a) {
-        A = a;
-    }
+    // Getters and setters for field dimensions and properties
+    public double getA() { return A; }
+    public void setA(double a) { A = a; }
 
-    public double getB() {
-        return B;
-    }
+    public double getB() { return B; }
+    public void setB(double b) { B = b; }
 
-    public void setB(double b) {
-        B = b;
-    }
+    public double getC() { return C; }
+    public void setC(double c) { C = c; }
 
-    public double getC() {
-        return C;
-    }
+    public double getD() { return D; }
+    public void setD(double d) { D = d; }
 
-    public void setC(double c) {
-        C = c;
-    }
+    public double getE() { return E; }
+    public void setE(double e) { E = e; }
 
-    public double getD() {
-        return D;
-    }
+    public double getF() { return F; }
+    public void setF(double f) { F = f; }
 
-    public void setD(double d) {
-        D = d;
-    }
+    public double getG() { return G; }
+    public void setG(double g) { G = g; }
 
-    public double getE() {
-        return E;
-    }
+    public double getH() { return H; }
+    public void setH(double h) { H = h; }
 
-    public void setE(double e) {
-        E = e;
-    }
+    public double getI() { return I; }
+    public void setI(double i) { I = i; }
 
-    public double getF() {
-        return F;
-    }
+    public double getJ() { return J; }
+    public void setJ(double j) { J = j; }
 
-    public void setF(double f) {
-        F = f;
-    }
+    public double getK() { return K; }
+    public void setK(double k) { K = k; }
 
-    public double getG() {
-        return G;
-    }
+    public double getL() { return L; }
+    public void setL(double l) { L = l; }
 
-    public void setG(double g) {
-        G = g;
-    }
+    public double getM() { return M; }
+    public void setM(double m) { M = m; }
 
-    public double getH() {
-        return H;
-    }
+    public double getN() { return N; }
+    public void setN(double n) { N = n; }
 
-    public void setH(double h) {
-        H = h;
-    }
+    public double getO() { return O; }
+    public void setO(double o) { O = o; }
 
-    public double getI() {
-        return I;
-    }
+    public double getP() { return P; }
+    public void setP(double p) { P = p; }
 
-    public void setI(double i) {
-        I = i;
-    }
+    public double getQ() { return Q; }
+    public void setQ(double q) { Q = q; }
 
-    public double getJ() {
-        return J;
-    }
+    public double getGoaldepth() { return goaldepth; }
+    public void setGoaldepth(double goaldepth) { this.goaldepth = goaldepth; }
 
-    public void setJ(double j) {
-        J = j;
-    }
-
-    public double getK() {
-        return K;
-    }
-
-    public void setK(double k) {
-        K = k;
-    }
-
-    public double getL() {
-        return L;
-    }
-
-    public void setL(double l) {
-        L = l;
-    }
-
-    public double getM() {
-        return M;
-    }
-
-    public void setM(double m) {
-        M = m;
-    }
-
-    public double getN() {
-        return N;
-    }
-
-    public void setN(double n) {
-        N = n;
-    }
-
-    public double getO() {
-        return O;
-    }
-
-    public void setO(double o) {
-        O = o;
-    }
-
-    public double getP() {
-        return P;
-    }
-
-    public void setP(double p) {
-        P = p;
-    }
-
-    public double getQ() {
-        return Q;
-    }
-
-    public void setQ(double q) {
-        Q = q;
-    }
-}
+    public double getGoalwidth() { return goalwidth; }
+    public void setGoalwidth(double goalwidth) { this.goalwidth = goalwidth; }; 
+}   
