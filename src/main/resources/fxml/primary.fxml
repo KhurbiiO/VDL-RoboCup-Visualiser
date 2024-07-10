@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -25,8 +29,8 @@
                   </AnchorPane>
                </children>
             </HBox>
-            <Label fx:id="timer" prefHeight="50.0" prefWidth="252.0" styleClass="timeboard" stylesheets="@../styles/style.css" text="0.00" />
-            <Label fx:id="refBoard" prefHeight="50.0" prefWidth="250.0" styleClass="refboard" stylesheets="@../styles/style.css" text="Magenta repair out" />
+            <Label fx:id="timer" prefHeight="50.0" prefWidth="252.0" styleClass="timeboard" stylesheets="@../styles/style.css" text="0:00:00" />
+            <Label fx:id="refBoard" prefHeight="50.0" prefWidth="250.0" styleClass="refboard" stylesheets="@../styles/style.css" />
             <HBox fx:id="statsTeamB" styleClass="hcontainer" stylesheets="@../styles/style.css">
                <children>
                   <Label fx:id="scoreTeamB" prefHeight="100.0" prefWidth="100.0" styleClass="scoreboard" stylesheets="@../styles/style.css" text="0" />
@@ -41,7 +45,85 @@
          </children>
       </VBox>
       <Button layoutX="957.0" layoutY="551.0" mnemonicParsing="false" onAction="#rotateField" stylesheets="@../styles/style.css" text="⟳" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-      <Button layoutX="823.0" layoutY="583.0" mnemonicParsing="false" onAction="#loadConfig" prefHeight="26.0" prefWidth="110.0" stylesheets="@../styles/style.css" text="CONFIG" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="60.0" />
+      <Button layoutX="823.0" layoutY="583.0" mnemonicParsing="false" onAction="#toggleConfig" prefHeight="28.0" prefWidth="71.0" stylesheets="@../styles/style.css" text="CONFIG" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="60.0" />
+      <VBox fx:id="configMenu" layoutX="666.0" layoutY="406.0" prefHeight="175.0" prefWidth="366.0" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="420.0">
+               <children>
+                  <ComboBox fx:id="teamAChoice" prefWidth="150.0" promptText="TeamA" styleClass="button" stylesheets="@../styles/style.css">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ComboBox>
+                  <ComboBox fx:id="teamBChoice" prefWidth="150.0" promptText="TeamB" styleClass="button" stylesheets="@../styles/style.css">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="420.0">
+               <children>
+                  <CheckBox fx:id="teamAAway" mnemonicParsing="false" styleClass="button" stylesheets="@../styles/style.css" text="TeamA AWAY">
+                     <HBox.margin>
+                        <Insets bottom="5.0" right="45.0" top="5.0" />
+                     </HBox.margin>
+                  </CheckBox>
+                  <CheckBox fx:id="teamBAway" mnemonicParsing="false" styleClass="button" stylesheets="@../styles/style.css" text="TeamB AWAY">
+                     <HBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label styleClass="timeboard" stylesheets="@../styles/style.css" text="Broadcast IP:">
+                     <HBox.margin>
+                        <Insets right="80.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="3.0" left="5.0" right="5.0" top="3.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="broadCastIPConfig" prefHeight="26.0" prefWidth="135.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="28.0" prefWidth="166.0" styleClass="timeboard" stylesheets="@../styles/style.css" text="Broadcast Port:">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="3.0" left="5.0" right="5.0" top="3.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="broadCastPortConfig" prefHeight="26.0" prefWidth="177.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#applyConfig" stylesheets="@../styles/style.css" text="Apply">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
    <effect>
       <InnerShadow blurType="ONE_PASS_BOX" />

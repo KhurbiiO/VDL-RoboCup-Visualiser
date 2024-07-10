@@ -66,7 +66,7 @@ public class CircleController {
      * @param strokeColor the new stroke color in hexadecimal format
      * @param strokeWidth the new stroke width in pixels
      */
-    public void setScreenColor(String fillColor, String strokeColor, int strokeWidth) {
+    public void setScreenColor(String fillColor, String strokeColor, double strokeWidth) {
         node.setFill(Color.web(fillColor));
         node.setStroke(Color.web(strokeColor));
         node.setStrokeWidth(strokeWidth);

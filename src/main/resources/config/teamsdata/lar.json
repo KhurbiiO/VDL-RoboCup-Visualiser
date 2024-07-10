@@ -1,0 +1,18 @@
+{
+	"type": "VISCONF",
+	"description": "Visualiser team configuration file",
+	"networking":
+	{
+		"UnicastAddr": "172.16.49.x",
+		"MulticastAddr": "224.16.32.49"
+	},
+	"appearance":
+	{
+		"longame24": "LAR MSL",
+		"shortname8": "LAR",
+        "logoPath" : "/media/teamlogos/lar.png",
+        "size" : 5,
+        "colorOne" : "#007BA7",    
+        "colorTwo" : "#EB4034"    
+	}
+}

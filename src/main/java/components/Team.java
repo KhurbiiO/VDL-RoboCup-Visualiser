@@ -2,7 +2,12 @@ package components;
 
 import components.controllers.*;
 
+import java.io.File;
 import java.util.Vector;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -15,12 +20,17 @@ import javafx.scene.shape.Circle;
 public class Team {
     private String teamName;           // The full name of the team
     private String smallName;          // The short name of the team
+    private String unicastAddr;        // The unicast IP range of the team
+    private String multicastAddr;      // The multicast IP of the team
+    private String logoPath;           // Relative path of the team logo
     private Vector<Robot> robots;      // A vector of Robot objects representing the team members
     private int teamScore;             // The score of the team
     private int teamSize;              // The size of the team (number of robots)
-    private String teamColor;          // The color of the team
+    private String teamColor1;          // The color of the team
+    private String teamColor2;          // The color of the team
     private boolean isTeamB;           // Indicates if this team is Team B
-    private String teamIPAddress;      // The IP address of the team
+    private boolean isHome;            // Indicates if team should use color 1
+
     public LabelController scoreDisplay;      // Controller for the score display label
     public Flag flagDisplay;                  // Controller for the team flag
     public Logo logoDisplay;                  // Controller for the team logo
@@ -30,30 +40,47 @@ public class Team {
      * Constructor for Team.
      * Initializes the team properties and creates the robots.
      * 
-     * @param teamName the full name of the team
-     * @param smallName the short name of the team
-     * @param teamSize the number of robots in the team
-     * @param teamColor the color of the team
-     * @param teamIPAddress the IP address of the team
      * @param isTeamB indicates if this team is Team B
      */
-    public Team(String teamName, String smallName, int teamSize, String teamColor, String teamIPAddress, Boolean isTeamB) {
+    public Team(Boolean isTeamB) {
         robots = new Vector<Robot>();
-        for (int i = 0; i < teamSize; i++) {
-            robots.add(new Robot());
-        }
-        this.teamName = teamName;
-        this.smallName = smallName;
         this.teamScore = 0;
-        this.teamColor = teamColor;
-        this.teamSize = teamSize;
-        this.isTeamB = isTeamB;
+
         this.scoreDisplay = new LabelController();
         this.logoDisplay = new Logo();
         this.flagDisplay = new Flag();
         this.connectionDisplay = new ConIndactor();
-        this.teamIPAddress = teamIPAddress;
     }
+
+    /**
+     * Updates the team's properties based on the given JSON configuration.
+     * 
+     * @param jsonFilePath the path to the JSON configuration file
+     * @throws Exception if there is an error reading the file (either IO or NullPointer)
+     */
+        public void updateFromJson(String jsonFilePath, boolean isHome) throws Exception {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+
+            JsonNode networkingNode = rootNode.path("networking");
+            this.unicastAddr = networkingNode.path("UnicastAddr").asText();
+            this.multicastAddr = networkingNode.path("MulticastAddr").asText();
+
+            JsonNode appearanceNode = rootNode.path("appearance");
+            this.teamName = appearanceNode.path("longame24").asText();
+            this.smallName = appearanceNode.path("shortname8").asText();
+            this.logoPath = appearanceNode.path("logoPath").asText();
+            this.teamSize = appearanceNode.path("size").asInt();
+            this.teamColor1 = appearanceNode.path("colorOne").asText();  // Assuming colorOne is the primary team color
+            this.teamColor2 = appearanceNode.path("colorTwo").asText();  // Assuming colorOne is the primary team color
+            this.isHome = isHome;
+
+            //init robots
+            robots.clear();
+            for (int i = 0; i < teamSize; i++) {
+                robots.add(new Robot());
+            }
+        }
 
     /**
      * Binds the visual components (logo, flag, score display, connection indicator) to the team.
@@ -70,6 +97,26 @@ public class Team {
         this.connectionDisplay.bindCircle(connectionDisplay);
     }
 
+    public void setIsTeamB(boolean isTeamB){
+        this.isTeamB = isTeamB;
+    }
+    
+    /**
+     * Sets the team color and updates the visual representation of the robots and flag.
+     * 
+     * @param teamColor the new color of the team
+     * @param playerStroke the stroke color for the robots
+     * @param playerStrokeWidth the stroke width for the robots
+     */
+    public void loadTeam(String playerStroke, double playerStrokeWidth) {
+        String teamColor = getTeamColor();
+        for (int i = 0; i < this.teamSize; i++) {
+            robots.get(i).setScreenColor(teamColor, playerStroke, playerStrokeWidth);
+        }
+        flagDisplay.setScreenColor(teamColor);
+        logoDisplay.setImage(logoPath);
+    }
+
     /**
      * Gets the robot at the specified index.
      * 
@@ -81,38 +128,24 @@ public class Team {
     }
 
     // Getter methods for team properties
-    public String getTeamIPAddress() { return teamIPAddress; }
+    public String getUnicastAddr() { return unicastAddr; }
+    public String getMulticastAddr() { return multicastAddr; }
     public String getTeamName() { return teamName; }
     public String getSmallName() { return smallName; }
+    public String getLogoPath() { return logoPath; }
     public int getTeamScore() { return teamScore; }
     public int getTeamSize() { return teamSize; }
-    public String getTeamColor() { return teamColor; }
+    public String getTeamColor1() { return teamColor1; }
+    public String getTeamColor2() { return teamColor2; }
     public boolean isTeamB() { return isTeamB; }
 
-    // Setter methods for team properties
-    public void setTeamName(String teamName) { this.teamName = teamName; }
-    public void setSmallName(String smallName) { this.smallName = smallName; }
-    
     public void setTeamScore(int teamScore) {
         this.teamScore = teamScore;
         scoreDisplay.setScreenText(Integer.toString(teamScore));
     }
 
-    public void setTeamSize(int teamSize) { this.teamSize = teamSize; }
-    public void setTeamIPAddress(String teamIPAddress) { this.teamIPAddress = teamIPAddress; }
-
-    /**
-     * Sets the team color and updates the visual representation of the robots and flag.
-     * 
-     * @param teamColor the new color of the team
-     * @param stroke the stroke color for the robots
-     * @param strokeWidth the stroke width for the robots
-     */
-    public void setTeamColor(String teamColor, String stroke, int strokeWidth) {
-        this.teamColor = teamColor;
-        for (int i = 0; i < teamSize; i++) {
-            robots.get(i).setScreenColor(teamColor, stroke, strokeWidth);
-        }
-        flagDisplay.setScreenColor(teamColor);
+    public String getTeamColor(){
+        if (isHome) return teamColor1;
+        return teamColor2;
     }
 }

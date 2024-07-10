@@ -1,5 +1,8 @@
 package components;
 
+import java.io.File;
+import java.net.URL;
+
 import components.controllers.PaneController;
 
 /**
@@ -27,9 +30,9 @@ public class Logo extends PaneController {
      */
     public void setImage(String path) {
         // Convert the resource path to a URL format
-        this.path = Logo.class.getResource(path).toExternalForm();
+        this.path = getResource(path);
         // Set the background image of the Pane node
-        this.getNode().setStyle("-fx-background-image: url(" + this.path + ");");
+        this.getNode().setStyle("-fx-background-image: url(file://" + this.path + ");");
     }
 
     /**
@@ -39,5 +42,15 @@ public class Logo extends PaneController {
      */
     public String getPath() {
         return path;
+    }
+
+    private String getResource(String path){
+        // Get the resource URL
+        URL resource = Logo.class.getResource(path);
+        if (resource != null) {
+            File file = new File(resource.getFile());
+            return file.getAbsolutePath();
+        }
+        return null;
     }
 }

@@ -23,7 +23,7 @@
 .teamlogo{
     -fx-background-color:#858886;
     -fx-border-color: black;
-    /* -fx-background-image: url("../media/team_one.png"); */
+    /* -fx-background-image: url("file:///home/khurbii/Documents/Fontys_S6/RoboCup/UX_Prototypes/VDL-RoboCup-Visualizer/target/classes/media/teamlogos/tech_united.png"); */
     -fx-background-size: 100% 100%;; 
     -fx-background-position: center; 
     -fx-background-repeat: no-repeat;

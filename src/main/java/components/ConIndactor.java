@@ -31,4 +31,6 @@ public class ConIndactor extends CircleController {
             setScreenColor("#FE1203", "#000000", 1); // Red for not connected
         }
     }
+
+    public boolean getConnected(){ return connected; }
 }

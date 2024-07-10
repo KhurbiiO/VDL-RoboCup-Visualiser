@@ -1,29 +1,35 @@
 package visualizer.match_viewer;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
-import javax.swing.JFileChooser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import components.Ball;
 import components.ConIndactor;
-import components.Config;
+import components.UIConfig;
 import components.CoordsTransformation;
 import components.Robot;
 import components.StopWatch;
 import components.Team;
 import components.Field;
 import components.communication.BroadCast;
-import components.communication.RefClient;
-import components.communication.WSClient;
 import components.controllers.LabelController;
 import components.controllers.VBoxController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -82,15 +88,34 @@ public class FXMLController implements Initializable {
     @FXML
     private VBox matchStats;
 
+    @FXML 
+    private VBox configMenu;
+
+    @FXML 
+    private ComboBox<String> teamAChoice;
+
+    @FXML 
+    private ComboBox<String> teamBChoice;
+
+    @FXML
+    private TextField broadCastIPConfig;
+    
+    @FXML
+    private TextField broadCastPortConfig;
+
+    @FXML
+    private CheckBox teamAAway;
+
+    @FXML
+    private CheckBox teamBAway;
+    
+
     private Team teamA;
     private Team teamB;
     private Ball ball;
     private StopWatch stopWatch;
 
-    // private WSClient WSTeamAClient;
-    // private WSClient WSTeamBClient;
     private BroadCast broadCast;
-    // private RefClient refClient;
 
     private CoordsTransformation transform;
 
@@ -101,13 +126,12 @@ public class FXMLController implements Initializable {
     private ConIndactor connACircleController;
     private ConIndactor connBCircleController;
 
-    private Config config;
+    private UIConfig config;
     private Field fieldController;
-
-    private double realWidth;
-    private double realHeight;
     private double rotation = 0;
-    private boolean isLaid = false;
+    private boolean isLaid = true;
+    private boolean configIsActive = false;
+    private Map<String, String> teamsDict;
 
     /**
      * Rotates the field by 90 degrees.
@@ -117,170 +141,77 @@ public class FXMLController implements Initializable {
         rotation = (rotation + 90) % 360;
         field.setRotate(rotation);
         isLaid = !isLaid;
-        resizeComponents(config.getLoaded());        
+        resizeComponents((broadCast != null));        
     }
 
     /**
      * Loads the configuration file and initializes the components.
      */
     @FXML
-    void loadConfig() {
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            config.readConfig(selectedFile.getAbsolutePath());
-
-            // Update field information
-            updateFieldInformation();
+    void applyConfig() {
+        try{
+            teamA.updateFromJson(getResource(teamsDict.get(teamAChoice.getValue())), !teamAAway.isSelected());
+            teamB.updateFromJson(getResource(teamsDict.get(teamBChoice.getValue())), !teamBAway.isSelected());
 
             int n = field.getChildren().size();
             if (n > 1) {
                 fieldController.removePlayers(--n);
             }
+
             initTeam(teamA, logoTeamA, flagTeamA, scoreTeamA, connectionTeamA);
             initTeam(teamB, logoTeamB, flagTeamB, scoreTeamB, connectionTeamB);
             initBall(ball, field);
 
-            // Update team A info
-            updateTeamInfo(teamA, config.getTeamAFlagcolor(), config.getTeamASmallname(), config.getTeamAFullname(), config.getTeamASize(), config.getTeamALogoPath());
-
-            // Update team B info
-            updateTeamInfo(teamB, config.getTeamBFlagcolor(), config.getTeamBSmallname(), config.getTeamBFullname(), config.getTeamBSize(), config.getTeamBLogoPath());
+            teamA.loadTeam(config.getPlayerStroke(), config.getPlayerStrokeWidth());
+            teamB.loadTeam(config.getPlayerStroke(), config.getPlayerStrokeWidth());
 
             ball.setScreenColor(config.getBallColor(), config.getBallStroke(), config.getBallStrokeWidth());
 
-            // Update field measurements
-            realWidth = fieldController.getB() + 2 * fieldController.getL() + 2 * fieldController.getM();
-            realHeight = fieldController.getA() + 2 * fieldController.getL();
+            fieldController.drawField(teamA.getTeamColor(), teamB.getTeamColor());
+            resizeComponents((broadCast != null));
 
-            // initWSClientA();
-            // initWSClientB();
-            initBroadcast();
-            // initRefClient();
-
-            fieldController.drawField(config.getTeamAFlagcolor(), config.getTeamBFlagcolor(), config.getFieldColor());
-            resizeComponents(config.getLoaded());
+            initBroadcast(broadCastIPConfig.getText(), Integer.parseInt(broadCastPortConfig.getText()), false);
+            configMenu.setVisible(false); // Close on succesfull configuration
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Updates the field information from the configuration.
-     */
-    private void updateFieldInformation() {
-        fieldController.setA(config.getFieldA());
-        fieldController.setB(config.getFieldB());
-        fieldController.setC(config.getFieldC());
-        fieldController.setD(config.getFieldD());
-        fieldController.setE(config.getFieldE());
-        fieldController.setF(config.getFieldF());
-        fieldController.setG(config.getFieldG());
-        fieldController.setH(config.getFieldH());
-        fieldController.setI(config.getFieldI());
-        fieldController.setJ(config.getFieldJ());
-        fieldController.setK(config.getFieldK());
-        fieldController.setL(config.getFieldL());
-        fieldController.setM(config.getFieldM());
-        fieldController.setN(config.getFieldN());
-        fieldController.setO(config.getFieldO());
-        fieldController.setP(config.getFieldP());
-        fieldController.setQ(config.getFieldQ());
-        fieldController.setGoalwidth(config.getGoalWidth());
-        fieldController.setGoaldepth(config.getGoalDepth());
+    @FXML
+    private void toggleConfig(){
+        configIsActive = !configIsActive;
+        configMenu.setVisible(configIsActive);
     }
 
-    /**
-     * Updates the information for a given team from the configuration.
-     */
-    private void updateTeamInfo(Team team, String flagColor, String smallName, String fullName, int teamSize, String logoPath) {
-        team.setTeamColor(flagColor, config.getPlayerStroke(), config.getPlayerStrokeWidth());
-        team.setSmallName(smallName);
-        team.setTeamName(fullName);
-        team.setTeamSize(teamSize);
-        team.logoDisplay.setImage(logoPath);
+    private Map<String, String> getTeamsList(String filePath){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Read JSON file and convert it to a Map
+            Map<String, String> map = objectMapper.readValue(new File(filePath), Map.class);
+            return map;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * Initializes the WebSocket client for Broadcast.
      */
-    private void initBroadcast() {
+    private void initBroadcast(String ip, int port, boolean debug) {
         if (broadCast == null) {
-            broadCast = new BroadCast(config.getBroadCastPort(), config.getBroadCastIP(), teamA, teamB, ball, fieldController, transform, stopWatch, refBoardController);
+            broadCast = new BroadCast(port, ip, teamA, teamB, ball, fieldController, transform, stopWatch, refBoardController);
             broadCast.listen(true);
-            if (broadCast.isListening()) {
-                connACircleController.toggle();
-                connBCircleController.toggle();
-            }
         } else {
+            broadCast.listen(false);
             broadCast.close();
             connACircleController.toggle();
             connBCircleController.toggle();
-            broadCast = new BroadCast(config.getBroadCastPort(), config.getBroadCastIP(), teamA, teamB, ball, fieldController, transform, stopWatch, refBoardController);
+            broadCast = new BroadCast(port, ip, teamA, teamB, ball, fieldController, transform, stopWatch, refBoardController);
             broadCast.listen(true);
-            if (broadCast.isListening()) {
-                connACircleController.toggle();
-                connBCircleController.toggle();
-            }
         }
-        // broadCast.enableLogging(true);
+        if (debug) broadCast.enableLogging(true);
     }
-
-    // /**
-    //  * Initializes the WebSocket client for Broadcast.
-    //  */
-    // private void initWSClientA() {
-    //     if (WSTeamAClient == null) {
-    //         WSTeamAClient = new WSClient(config.getTeamAPort(), config.getTeamAIP(), teamA, ball, fieldController, null);
-    //         WSTeamAClient.listen(true);
-    //         if (WSTeamAClient.isJoined()) {
-    //             connACircleController.toggle();
-    //         }
-    //     } else {
-    //         WSTeamAClient.close();
-    //         connACircleController.toggle();
-    //         WSTeamAClient = new WSClient(config.getTeamAPort(), config.getTeamAIP(), teamA, ball, fieldController, null);
-    //         WSTeamAClient.listen(true);
-    //         if (WSTeamAClient.isJoined()) {
-    //             connACircleController.toggle();
-    //         }
-    //     }
-    // }
-
-    /**
-     * Initializes the WebSocket client for Team B.
-     */
-    // private void initWSClientB() {
-    //     if (WSTeamBClient == null) {
-    //         WSTeamBClient = new WSClient(config.getTeamBPort(), config.getTeamBIP(), teamB, ball, fieldController, transform);
-    //         WSTeamBClient.listen(true);
-    //         if (WSTeamBClient.isJoined()) {
-    //             connBCircleController.toggle();
-    //         }
-    //     } else {
-    //         WSTeamBClient.close();
-    //         connBCircleController.toggle();
-    //         WSTeamBClient = new WSClient(config.getTeamBPort(), config.getTeamBIP(), teamB, ball, fieldController, transform);
-    //         WSTeamBClient.listen(true);
-    //         if (WSTeamBClient.isJoined()) {
-    //             connBCircleController.toggle();
-    //         }
-    //     }
-    // }
-
-    // /**
-    //  * Initializes the RefClient.
-    //  */
-    // private void initRefClient() {
-    //     if (refClient == null) {
-    //         refClient = new RefClient(config.getRefboxPort(), config.getRefboxIP(), refBoardController, teamA, teamB, stopWatch);
-    //         refClient.listen(true);
-    //         refClient.listen(1000);
-    //     } else if (refClient != null && refClient.isListening()) {
-    //         refClient.close();
-    //         refClient = new RefClient(config.getRefboxPort(), config.getRefboxIP(), refBoardController, teamA, teamB, stopWatch);
-    //         refClient.listen(1000);
-    //     }
-    // }
 
     /**
      * Resizes the components of the UI based on the window size.
@@ -291,73 +222,57 @@ public class FXMLController implements Initializable {
         double width = root.getWidth();
         double height = root.getHeight();
 
-        matchStats.setPrefWidth(width * 0.20);
-        matchStats.setPrefHeight(height * 0.20);
+        matchStats.setPrefWidth(width * config.getRelativeWidthRatio());
+        matchStats.setPrefHeight(height * config.getRelativeHeightRatio());
 
-        statsTeamA.setPrefHeight(matchStats.getPrefHeight() * 0.2);
-        statsTeamB.setPrefHeight(matchStats.getPrefHeight() * 0.2);
+        statsTeamA.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeTeamASectionHeightRatio());
+        statsTeamB.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeTeamBSectionHeightRatio());
 
-        scoreTeamA.setPrefHeight(matchStats.getPrefHeight() * 0.2);
-        scoreTeamA.setPrefWidth(matchStats.getPrefWidth() * 0.4);
-        flagTeamA.setPrefWidth(matchStats.getPrefWidth() * 0.2);
-        logoTeamA.setPrefWidth(matchStats.getPrefWidth() * 0.4);
+        scoreTeamA.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeTeamASectionHeightRatio());
+        scoreTeamA.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamAScoreboardWidthRatio());
+        flagTeamA.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamAFlagWidthRatio());
+        logoTeamA.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamALogoWidthRatio());
 
-        scoreTeamB.setPrefHeight(matchStats.getPrefHeight() * 0.2);
-        scoreTeamB.setPrefWidth(matchStats.getPrefWidth() * 0.4);
-        flagTeamB.setPrefWidth(matchStats.getPrefWidth() * 0.2);
-        logoTeamB.setPrefWidth(matchStats.getPrefWidth() * 0.4);
+        scoreTeamB.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeTeamBSectionHeightRatio());
+        scoreTeamB.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamBScoreboardWidthRatio());
+        flagTeamB.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamBFlagWidthRatio());
+        logoTeamB.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTeamBLogoWidthRatio());
 
-        timer.setPrefHeight(matchStats.getPrefHeight() * 0.15);
-        timer.setPrefWidth(matchStats.getPrefWidth() * 1.0);
-        refBoard.setPrefHeight(matchStats.getPrefHeight() * 0.1);
-        refBoard.setPrefWidth(matchStats.getPrefWidth() * 1.0);
+        timer.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeTimerboardHeightRatio());
+        timer.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeTimerboardWidthRatio());
+        refBoard.setPrefHeight(matchStats.getPrefHeight() * config.getRelativeRefboardHeightRatio());
+        refBoard.setPrefWidth(matchStats.getPrefWidth() * config.getRelativeRefboardWidthRatio());
 
         adjustFontSizes(width, height);
 
         double fieldWidth;
         double fieldHeight;
+        if (isLaid){
+            fieldWidth = (width - matchStats.getPrefWidth() - config.getBorderSpaceWidth()*2); 
+            fieldHeight = (height - config.getBorderSpaceWidth()*2);
 
-        if (isLaid && rotation == 90){
-
-            fieldWidth = (height - 40);
-            fieldHeight = (width - matchStats.getPrefWidth() - 40);
-            double measurements[] = fitRectangleWithin(fieldHeight, fieldWidth, (9d/11d));
-
+            double measurements[] = fitRectangleWithin(fieldWidth, fieldHeight, (fieldController.getWidth()/fieldController.getHeight()));
 
             fieldWidth = measurements[0];
             fieldHeight = measurements[1];
-
-            AnchorPane.setTopAnchor(field, fieldWidth/2 - fieldHeight/2 + 20);
-
-        }
-        else if(isLaid && rotation == 270){
-            fieldWidth = (height - 40);
-            fieldHeight = (width - matchStats.getPrefWidth() - 40);
-            double measurements[] = fitRectangleWithin(fieldHeight, fieldWidth, (9d/11d));
-
-
-            fieldWidth = measurements[0];
-            fieldHeight = measurements[1];
-
-            AnchorPane.setTopAnchor(field, fieldWidth/2 - fieldHeight/2 + 20);
+            AnchorPane.setTopAnchor(field, config.getBorderSpaceWidth());   
         }
         else{
 
-            fieldWidth = (width - matchStats.getPrefWidth() - 40);
-            fieldHeight = (height - 40);
-            double measurements[] = fitRectangleWithin(fieldWidth, fieldHeight, (9d/11d));
+            fieldHeight = (width - matchStats.getPrefWidth() - config.getBorderSpaceWidth()*2);
+            fieldWidth = (height - config.getBorderSpaceWidth()*2);
+
+            double measurements[] = fitRectangleWithin(fieldWidth, fieldHeight, (fieldController.getWidth()/fieldController.getHeight()));
 
             fieldWidth = measurements[0];
             fieldHeight = measurements[1];
-
-            AnchorPane.setTopAnchor(field, 20d);            
+            AnchorPane.setTopAnchor(field, fieldWidth/2 - fieldHeight/2 + config.getBorderSpaceWidth());
         }  
-
-        fieldController.centerHScreenAnchor(-(matchStats.getPrefWidth() - 40));
 
         field.setPrefHeight(fieldHeight);
         field.setPrefWidth(fieldWidth);
-
+        AnchorPane.setLeftAnchor(field, (((width - field.getPrefWidth()) / 2) + -(fieldWidth/2 - fieldHeight/2 + config.getBorderSpaceWidth())));
+        
         if (fieldExists) {
             updateVisualsForComponents();
         }
@@ -369,18 +284,18 @@ public class FXMLController implements Initializable {
     private void updateVisualsForComponents() {
         for (int i = 0; i < teamA.getTeamSize(); i++) {
             Robot player = teamA.getPlayer(i);
-            player.setScreenRadius((config.getPlayerRadius() / realWidth) * field.getWidth());
-            player.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
+            player.setScreenRadius((config.getPlayerRadius() / fieldController.getWidth()) * field.getWidth());
+            player.updateVisuals(fieldController.getHeight(), fieldController.getWidth(), field.getPrefHeight(), field.getPrefWidth());
         }
 
         for (int i = 0; i < teamB.getTeamSize(); i++) {
             Robot player = teamB.getPlayer(i);
-            player.setScreenRadius((config.getPlayerRadius() / realWidth) * field.getWidth());
-            player.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
+            player.setScreenRadius((config.getPlayerRadius() / fieldController.getWidth()) * field.getWidth());
+            player.updateVisuals(fieldController.getHeight(), fieldController.getWidth(), field.getPrefHeight(), field.getPrefWidth());
         }
 
-        ball.setScreenRadius((config.getBallRadius() / realWidth) * field.getWidth());
-        ball.updateVisuals(realHeight, realWidth, field.getPrefHeight(), field.getPrefWidth());
+        ball.setScreenRadius((config.getBallRadius() / fieldController.getWidth()) * field.getWidth());
+        ball.updateVisuals(fieldController.getHeight(), fieldController.getWidth(), field.getPrefHeight(), field.getPrefWidth());
     }
 
     /**
@@ -409,33 +324,21 @@ public class FXMLController implements Initializable {
     /**
      * Fits a rectangle within the given dimensions while maintaining the aspect ratio.
      * 
-     * @param widthA the width of the containing area
-     * @param heightA the height of the containing area
-     * @param aspectRatioB the aspect ratio of the rectangle to fit
+     * @param width the width of the containing area
+     * @param height the height of the containing area
+     * @param ratio the aspect ratio of the rectangle to fit
      * @return an array containing the new width and height of the rectangle
      */
-    public static double[] fitRectangleWithin(double widthA, double heightA, double aspectRatioB) {
-        double newWidthB;
-        double newHeightB;
-
-        if (aspectRatioB > (widthA / heightA)) {
-            newWidthB = widthA;
-            newHeightB = widthA / aspectRatioB;
+    public static double[] fitRectangleWithin(double width, double height, double ratio) {
+        double desiredHeight = ratio * width;
+        if (desiredHeight <= height) {
+            return new double[]{width, desiredHeight};
         } else {
-            newHeightB = heightA;
-            newWidthB = heightA * aspectRatioB;
+            double scalingFactor = height / desiredHeight;
+            double newWidth = width * scalingFactor;
+            double newHeight = desiredHeight * scalingFactor;
+            return new double[]{newWidth, newHeight};
         }
-
-        if (newWidthB > widthA) {
-            newWidthB = widthA;
-            newHeightB = newWidthB / aspectRatioB;
-        }
-        if (newHeightB > heightA) {
-            newHeightB = heightA;
-            newWidthB = newHeightB * aspectRatioB;
-        }
-
-        return new double[]{newWidthB, newHeightB};
     }
 
     /**
@@ -470,11 +373,21 @@ public class FXMLController implements Initializable {
     private void initBall(Ball ball, Pane field) {
         Circle circle = new Circle();
         ball.bindCircle(circle);
-        ball.currentPosition.setCoordinate(config.getFieldB()/2, config.getFieldA()/2, 0);;
+        ball.currentPosition.setCoordinate(0, 0, 0);;
         ball.setScreenRadius(config.getBallRadius());
         ball.setScreenColor(config.getBallColor(), config.getBallStroke(), config.getBallStrokeWidth());
         ball.setScreenOpacity(1);
         field.getChildren().add(circle);
+    }
+
+    private String getResource(String path){
+        // Get the resource URL
+        URL resource = getClass().getResource(path);
+        if (resource != null) {
+            File file = new File(resource.getFile());
+            return file.getAbsolutePath();
+        }
+        return null;
     }
 
     /**
@@ -484,20 +397,34 @@ public class FXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Bind components to the rootPane size for scalability
         root.widthProperty().addListener((obs, oldVal, newVal) -> {
-            resizeComponents(config.getLoaded());
+            resizeComponents((broadCast != null));
         });
         root.heightProperty().addListener((obs, oldVal, newVal) -> {
-            resizeComponents(config.getLoaded());
+            resizeComponents((broadCast != null));
         });
-
-        config = new Config();
-        transform = new CoordsTransformation();
 
         fieldController = new Field();
         fieldController.bindPane(field);
 
-        teamA = new Team("TeamA", "A", 5, "#2481d7", "", false);
-        teamB = new Team("TeamB", "B", 5, "#ed4848", "", true);
+        try{
+            config = new UIConfig(getResource("/config/ui.json"));
+            teamsDict = getTeamsList(getResource("/config/teams.json"));
+            fieldController.loadConfigFromJson(getResource("/config/field.json"));
+            
+            Set<String> keys = teamsDict.keySet();
+            ObservableList<String> items = FXCollections.observableArrayList(keys);
+            teamAChoice.setItems(items);
+            teamBChoice.setItems(items);
+
+            fieldController.drawField("#000000", "#000000");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        transform = new CoordsTransformation();
+
+        teamA = new Team(false);
+        teamB = new Team(true);
         ball = new Ball();
 
         stopWatch = new StopWatch(50);
@@ -515,7 +442,7 @@ public class FXMLController implements Initializable {
         refBoardController = new LabelController();
         refBoardController.bindLabel(refBoard);
 
-        resizeComponents(config.getLoaded());
+        resizeComponents((broadCast != null));
 
         Timeline updateUI = new Timeline(
             new KeyFrame(Duration.millis(50d), event -> {

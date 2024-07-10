@@ -1,0 +1,30 @@
+{
+    "type": "VISCONF",
+	"description": "Visualiser Field Styling configuration",
+	"measurements" : {
+        "goalWidth" : 2.45,
+        "goalDepth" : 0.4,
+        "A" : 22,
+        "B" : 14,
+        "C" : 6.9,
+        "D" : 3.9,
+        "E" : 2.25,
+        "F" : 0.75,
+        "G" : 0.75,
+        "H" : 4,
+        "I" : 3.6,
+        "J" : 0.15,
+        "K" : 0.125,
+        "L" : 1,
+        "M" : 1,
+        "N" : 7.5,
+        "O" : 1,
+        "P" : 0.5,
+        "Q" : 3.5
+    },
+
+    "appearance" : {
+        "color" : "#A8DC7F",
+        "raColor" : "#71BBD2"
+    }
+}

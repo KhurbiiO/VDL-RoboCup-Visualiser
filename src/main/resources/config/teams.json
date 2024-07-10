@@ -1,0 +1,11 @@
+{
+    "Big Hero X" : "/config/teamsdata/big_hero_x.json",
+    "Falcons" : "/config/teamsdata/falcons.json",
+    "Hibikino" : "/config/teamsdata/hibikino_musashi.json",
+    "IRIS" : "/config/teamsdata/iris.json",
+    "LAR" : "/config/teamsdata/lar.json",
+    "RCToulon" : "/config/teamsdata/rct.json",
+    "Tech United" : "/config/teamsdata/tech_united.json",
+    "UMC" : "/config/teamsdata/umc.json",
+    "VDL Robo" : "/config/teamsdata/vdl.json"
+}

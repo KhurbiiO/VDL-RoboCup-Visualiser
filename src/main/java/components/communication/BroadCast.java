@@ -25,8 +25,9 @@ public class BroadCast extends UDPClient {
     private final String COMM_START = "START";
     private final String COMM_STOP = "STOP";
     private final String COMM_RESET = "RESET";
-    private final String COMM_SUBSTITUTION = "SUBSTITUTION";
+    private final String COMM_HALFTIME = "HALF_TIME";
     private final String COMM_GOAL = "GOAL";
+    private final String COMM_ENDGAME = "END_GAME";
 
     private final String BC_TEAMS = "teams";
     private final String BC_EVENT = "event";
@@ -116,18 +117,37 @@ public class BroadCast extends UDPClient {
                                 System.out.println("Handling COMM_START event");
                                 Platform.runLater(() -> stopWatch.startSW());
                                 break;
+
+                            case COMM_HALFTIME:
+                                System.out.println("Handling COMM_HALFTIME");
+                                teamA.setIsTeamB(true);
+                                teamB.setIsTeamB(false);
+
+                                Platform.runLater(() -> {
+                                    field.drawField(teamB.getTeamColor(), teamA.getTeamColor());
+                                });
+                                break;
+
+                            case COMM_ENDGAME:
+                                System.out.println("Handling COMM_ENDGAME");
+                                teamA.setIsTeamB(false);
+                                teamB.setIsTeamB(true);
+
+                                Platform.runLater(() -> {
+                                    field.drawField("#000000", "#000000");
+                                });
+                                break;
         
                             case COMM_GOAL:
                                 System.out.println("Handling COMM_GOAL event");
                                 try {
                                     String target = jsonNode.get("team").asText();
-                                    if (target.startsWith(teamA.getTeamIPAddress())) {
-                                        teamA.setTeamScore(0); // Reset score (if needed)
+                                    if (target == teamA.getTeamName()) {
                                         Platform.runLater(() -> {
                                             refBoardController.setScreenText(String.format("%s Scored!", teamA.getTeamName()));
                                             teamA.setTeamScore(teamA.getTeamScore() + 1);
                                         });
-                                    } else if (target.startsWith(teamB.getTeamIPAddress())) {
+                                    } else if (target == teamB.getTeamName()) {
                                         Platform.runLater(() -> {
                                             refBoardController.setScreenText(String.format("%s Scored!", teamB.getTeamName()));
                                             teamB.setTeamScore(teamB.getTeamScore() + 1);
@@ -149,16 +169,22 @@ public class BroadCast extends UDPClient {
                                     teamB.setTeamScore(0);
                                 });
                                 break;
-        
-                            case COMM_SUBSTITUTION:
-                                System.out.println("Handling COMM_SUBSTITUTION event");
-                                break;
-        
+                                
                             default:
                                 System.out.println("Handling event");
                                 try {
                                     String target = jsonNode.get("team").asText();
-                                    Platform.runLater(() -> refBoardController.setScreenText(String.format("%s %s", command, getTeam(target))));
+                                    if (target == teamA.getTeamName()) {
+                                        Platform.runLater(() -> {
+                                            Platform.runLater(() -> refBoardController.setScreenText(String.format("%s %s", command, teamA.getTeamName())));
+                                            teamA.setTeamScore(teamA.getTeamScore() + 1);
+                                        });
+                                    } else if (target == teamB.getTeamName()) {
+                                        Platform.runLater(() -> {
+                                            Platform.runLater(() -> refBoardController.setScreenText(String.format("%s %s", command, teamB.getTeamName())));
+                                            teamB.setTeamScore(teamB.getTeamScore() + 1);
+                                        });
+                                    }
                                 } catch (NoSuchElementException e) {
                                     Platform.runLater(() -> refBoardController.setScreenText(command));
                                 }
@@ -167,126 +193,100 @@ public class BroadCast extends UDPClient {
                 }
 
                 case (BC_TEAMS): {
-                    //TODO: Clean code.
-                    Team team = teamA;
-                    // Update robots
-                    Iterator<JsonNode> robots = jsonNode.get("teamA").get("worldState").get("robots").elements();
-                    for (int i = 0; i < team.getTeamSize(); i++) {
-                        try {
-                            JsonNode robot = robots.next();
-                            Robot player = team.getPlayer(i);
-
-                            player.setScreenOpacity(1); // Visually enable robot
-
-                            player.setBallEngaged(robot.get("ballEngaged").asBoolean());
-                            player.setBatterPercentage(robot.get("batteryLevel").asDouble());
-                            player.setIntention(robot.get("intention").asText());
-
-                            // Get current pose of the robot
-                            Iterator<JsonNode> currentPose_ = robot.get("pose").elements();
-                            final double[] currentPose = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
-
-                            // Get target pose of the robot
-                            Iterator<JsonNode> targetPose_ = robot.get("target pose").elements();
-                            final double[] targetPose = {targetPose_.next().asDouble(), targetPose_.next().asDouble(), targetPose_.next().asDouble()};
-
-                            final double[] transformedCurrentPose = currentPose;
-                            final double[] transformedTargetPose = targetPose;
-
-                            // Update the player's current and target positions on the JavaFX application thread
-                            Platform.runLater(() -> player.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
-                            player.setTargetPosition(transformedTargetPose[0], transformedTargetPose[1], transformedTargetPose[2]);
-                        } catch (NoSuchElementException e) {
-                            // Visually disable the rest of the robots if there are fewer robots than expected
-                            for (int j = i; j < team.getTeamSize(); j++) {
-                                team.getPlayer(i).setScreenOpacity(0);
-                            }
-                            break;
-                        }
+                    try{
+                        Iterator<JsonNode> robotsA = jsonNode.get("teamA").get("worldState").get("robots").elements();
+                        updateTeam(teamA, robotsA);
+                        if (!teamA.connectionDisplay.getConnected())
+                            teamA.connectionDisplay.toggle();
+                    }catch (NullPointerException e){
+                        if (teamA.connectionDisplay.getConnected())
+                            teamA.connectionDisplay.toggle(); 
+                    }
+                    try{
+                        Iterator<JsonNode> robotsB = jsonNode.get("teamB").get("worldState").get("robots").elements();
+                        updateTeam(teamB, robotsB);
+                        if (!teamB.connectionDisplay.getConnected())
+                            teamB.connectionDisplay.toggle();
+                    }catch (NullPointerException e){
+                        if (teamB.connectionDisplay.getConnected())
+                            teamB.connectionDisplay.toggle(); 
                     }
 
-                    team = teamB;
-                    robots = jsonNode.get("teamB").get("worldState").get("robots").elements();
-                    for (int i = 0; i < team.getTeamSize(); i++) {
-                        try {
-                            JsonNode robot = robots.next();
-                            Robot player = team.getPlayer(i);
-
-                            player.setScreenOpacity(1); // Visually enable robot
-
-                            player.setBallEngaged(robot.get("ballEngaged").asBoolean());
-                            player.setBatterPercentage(robot.get("batteryLevel").asDouble());
-                            player.setIntention(robot.get("intention").asText());
-
-                            // Get current pose of the robot
-                            Iterator<JsonNode> currentPose_ = robot.get("pose").elements();
-                            final double[] currentPose = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
-
-                            // Get target pose of the robot
-                            Iterator<JsonNode> targetPose_ = robot.get("target pose").elements();
-                            final double[] targetPose = {targetPose_.next().asDouble(), targetPose_.next().asDouble(), targetPose_.next().asDouble()};
-
-                            final double[] transformedCurrentPose = transform.transformRobotCoords(currentPose);;
-                            final double[] transformedTargetPose = transform.transformRobotCoords(targetPose);
-
-                            // Update the player's current and target positions on the JavaFX application thread
-                            Platform.runLater(() -> player.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
-                            player.setTargetPosition(transformedTargetPose[0], transformedTargetPose[1], transformedTargetPose[2]);
-                        } catch (NoSuchElementException e) {
-                            // Visually disable the rest of the robots if there are fewer robots than expected
-                            for (int j = i; j < team.getTeamSize(); j++) {
-                                team.getPlayer(i).setScreenOpacity(0);
-                            }
-                            break;
-                        }
-                    }
-
-                    // Update ball
-                    try {
+                    if (teamA.connectionDisplay.getConnected() && teamB.connectionDisplay.getConnected()){                                                       
                         Iterator<JsonNode> ballsA = jsonNode.get("teamA").get("worldState").get("balls").elements();
                         Iterator<JsonNode> ballsB = jsonNode.get("teamB").get("worldState").get("balls").elements();
 
-                        try {
-                            //TODO: Seperate Try catch (for cases where team doesn't have ball data)
-                            JsonNode ballA_ = ballsA.next(); // List is in order of confidence
-                            JsonNode ballB_ = ballsB.next(); // List is in order of confidence
-                            JsonNode ball_ = (ballA_.get("confidence").asDouble() > ballB_.get("confidence").asDouble()) ? ballA_ : ballB_;
-
-
-                            Iterator<JsonNode> currentPose_ = ball_.get("position").elements();
-                            final double[] currentPose = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
-                            ball.setConfidence(ball_.get("confidence").asDouble());
-
-                            final double[] transformedCurrentPose;
-
-                            // Transform coordinates if the team is team B
-                            if (team.isTeamB()) {
-                                transformedCurrentPose = transform.transformBallCoords(currentPose);
-                            } else {
-                                transformedCurrentPose = currentPose;
-                            }
-
-                            // Update the ball's current position on the JavaFX application thread
-                            Platform.runLater(() -> ball.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
-                        } catch (NoSuchElementException e) {}
-                    } catch (NoSuchElementException e) {}
-                        }
-
+                        JsonNode ballA_ = ballsA.next(); // List is in order of confidence
+                        JsonNode ballB_ = ballsB.next(); // List is in order of confidence
+                        JsonNode ball_ = (ballA_.get("confidence").asDouble() > ballB_.get("confidence").asDouble()) ? ballA_ : ballB_;
+                        updateBall(ball_, (ball_ == ballB_));
                     }
+
+                    else if (teamA.connectionDisplay.getConnected()){
+                        Iterator<JsonNode> ballsA = jsonNode.get("teamA").get("worldState").get("balls").elements();
+                        JsonNode ball_ = ballsA.next(); 
+                        updateBall(ball_, false);
+                    }
+
+                    else if (teamB.connectionDisplay.getConnected()){
+                        Iterator<JsonNode> ballsB = jsonNode.get("teamB").get("worldState").get("balls").elements();
+                        JsonNode ball_ = ballsB.next(); 
+                        updateBall(ball_, true);
+                    }
+                }
+            }
             
-        } catch (JsonProcessingException | NullPointerException e) {}
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Helper method to get the team name based on the IP address.
-     * 
-     * @param ipaddress the IP address to identify the team
-     * @return the name of the team
-     */
-    private String getTeam(String ipaddress) {
-        if (ipaddress.startsWith(teamA.getTeamIPAddress())) {
-            return teamA.getTeamName();
-        }
-        return teamB.getTeamName();
+    private void updateTeam(Team team, Iterator<JsonNode> robots){
+        // Iterator<JsonNode> robots = jsonNode.get("teamA").get("worldState").get("robots").elements();
+            for (int i = 0; i < team.getTeamSize(); i++) {
+                try {
+                    JsonNode robot = robots.next();
+                    Robot player = team.getPlayer(i);
+
+                    player.setScreenOpacity(1); // Visually enable robot
+
+                    player.setBallEngaged(robot.get("ballEngaged").asBoolean());
+                    player.setBatterPercentage(robot.get("batteryLevel").asDouble());
+                    player.setIntention(robot.get("intention").asText());
+
+                    // Get current pose of the robot
+                    Iterator<JsonNode> currentPose_ = robot.get("pose").elements();
+                    final double[] currentPose = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
+
+                    // Get target pose of the robot
+                    Iterator<JsonNode> targetPose_ = robot.get("target pose").elements();
+                    final double[] targetPose = {targetPose_.next().asDouble(), targetPose_.next().asDouble(), targetPose_.next().asDouble()};
+
+                    final double[] transformedCurrentPose = (team.isTeamB()) ? transform.transformRobotCoords(currentPose) : currentPose;
+                    final double[] transformedTargetPose = (team.isTeamB()) ? transform.transformRobotCoords(targetPose) : targetPose;
+
+                    // Update the player's current and target positions on the JavaFX application thread
+                    Platform.runLater(() -> player.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
+                    player.setTargetPosition(transformedTargetPose[0], transformedTargetPose[1], transformedTargetPose[2]);
+                } catch (NoSuchElementException e) {
+                    // Visually disable the rest of the robots if there are fewer robots than expected
+                    for (int j = i; j < team.getTeamSize(); j++) {
+                        team.getPlayer(i).setScreenOpacity(0);
+                    }
+                    break;
+                }
+            }
+
+    }
+
+    private void updateBall(JsonNode ball_, boolean isTeamB){
+
+        Iterator<JsonNode> currentPose_ = ball_.get("position").elements();
+        final double[] currentPose = {currentPose_.next().asDouble(), currentPose_.next().asDouble(), currentPose_.next().asDouble()};
+        ball.setConfidence(ball_.get("confidence").asDouble());
+
+        final double[] transformedCurrentPose = (isTeamB) ? transform.transformBallCoords(currentPose) : currentPose;
+        // Update the ball's current position on the JavaFX application thread
+        Platform.runLater(() -> ball.setCurrentPosition(transformedCurrentPose[0], transformedCurrentPose[1], transformedCurrentPose[2], fieldHeight, fieldWidth, field.getNode().getPrefHeight(), field.getNode().getPrefWidth()));
     }
 }

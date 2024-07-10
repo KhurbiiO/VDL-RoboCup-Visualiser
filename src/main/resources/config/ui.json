@@ -1,0 +1,41 @@
+{
+    "type": "VISCONF",
+	"description": "Visualiser Components Styling configuration",
+
+    "field" : {
+        "borderSpaceWidth" : 20
+    },
+    "matchStats" : {
+        "relativeWidthRatio" : 0.2,
+        "relativeHeightRatio" : 0.2,
+
+        "ralativeTeamASectionHeightRatio" : 0.2,
+        "ralativeTeamBSectionHeightRatio" : 0.2,
+
+        "relativeTeamAScoreboardWidthRatio" : 0.4,
+        "relativeTeamAFlagWidthRatio" : 0.2,
+        "relativeTeamALogoWidthRatio": 0.4,
+
+        "relativeTeamBScoreboardWidthRatio" : 0.4,
+        "relativeTeamBFlagWidthRatio" : 0.2,
+        "relativeTeamBLogoWidthRatio": 0.4,
+
+        "relativeTimerboardWidthRatio" : 1,
+        "relativeTimerboardHeightRatio" : 0.15,
+        "relativeRefboardWidthRatio" : 1,
+        "relativeRefboardHeightRatio" : 0.1            
+    },
+
+    "player" : {
+        "radius" : 0.45,
+        "stroke" : "#000000",
+        "strokeWidth"  : 2
+    },
+
+    "ball" : {
+        "color" : "#a8ff05",
+        "radius" : 0.25,
+        "stroke" : "#000000",
+        "strokeWidth"  : 2
+    }
+}

@@ -32,7 +32,7 @@ public class Velocity {
     }
 
       
-    private double[] origintranslationObstacle(double[] obstacle, double[] vector){
+    private double[] origintranslationObstacle(double[] obstacle, double[] vector) throws IllegalArgumentException{
         if(obstacle.length != vector.length){
             throw new IllegalArgumentException("Arrays must be of equal length");
         }
@@ -43,7 +43,7 @@ public class Velocity {
         return result;
     }
 
-    private double[] originTranslationRadians(double[] robot, double[] vector){
+    private double[] originTranslationRadians(double[] robot, double[] vector) throws IllegalArgumentException{
         if (robot.length != vector.length) {
             throw new IllegalArgumentException("Arrays must be of equal length");
         }
@@ -60,7 +60,7 @@ public class Velocity {
         return result;
     }
 
-    private double[] originTranslation(double[]object, double[] vector){
+    private double[] originTranslation(double[]object, double[] vector) throws IllegalArgumentException{
         if (object.length != vector.length) {
             throw new IllegalArgumentException("Arrays must be of equal length");
         }

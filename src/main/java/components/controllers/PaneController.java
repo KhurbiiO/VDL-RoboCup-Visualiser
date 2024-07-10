@@ -87,12 +87,12 @@ public class PaneController {
     public void centerHScreenAnchor(double offset) {
         try {
             AnchorPane parent = (AnchorPane) node.getParent();
-            AnchorPane.setLeftAnchor(node, ((parent.getWidth() - node.getPrefWidth()) / 2) + offset);
+            AnchorPane.setLeftAnchor(node, ((parent.getWidth() - getNodeWidth()) / 2) + offset);
             removeHListeners(parent);
 
             if (widthListener == null) {
                 widthListener = (obs, oldVal, newVal) -> {
-                    AnchorPane.setLeftAnchor(node, ((newVal.doubleValue() - node.getPrefWidth()) / 2) + offset);
+                    AnchorPane.setLeftAnchor(node, ((newVal.doubleValue() - getNodeWidth()) / 2) + offset);
                 };
                 parent.widthProperty().addListener(widthListener);
             }
@@ -123,6 +123,15 @@ public class PaneController {
             parent.widthProperty().removeListener(widthListener);
             widthListener = null;
         }
+    }
+
+     /**
+     * Gets the width of the node, considering its rotation.
+     * 
+     * @return the effective width of the node
+     */
+    private double getNodeWidth() {
+        return (node.getRotate() == 0 || node.getRotate() == 180) ? node.getPrefWidth() : node.getPrefHeight();
     }
 
     /**

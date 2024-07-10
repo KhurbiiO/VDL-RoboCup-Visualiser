@@ -1,0 +1,18 @@
+{
+	"type": "VISCONF",
+	"description": "Visualiser team configuration file",
+	"networking":
+	{
+		"UnicastAddr": "172.16.44.*",
+		"MulticastAddr": "224.16.32.44"
+	},
+	"appearance":
+	{
+		"longame24": "Hibikino-Musashi",
+		"shortname8": "Hibikino",
+        "logoPath" : "/media/teamlogos/hibikino_musashi.png",
+        "size" : 5,
+        "colorOne" : "#007BA7",    
+        "colorTwo" : "#EB4034"    
+	}
+}
